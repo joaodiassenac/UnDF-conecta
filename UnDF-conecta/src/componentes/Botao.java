@@ -1,56 +1,39 @@
 package componentes;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Cursor;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 public class Botao {
-    private ImageIcon icone;
     private JButton botaoClicavel;
-    private int largura;
-    private int altura;
-    private int posicaoX;
-    private int posicaoY;
 
-    public Botao(ImageIcon icone,int posicaoX,int posicaoY){
+    public Botao(ImageIcon icone, int posicaoX, int posicaoY) {
+        int largura = icone.getIconWidth();
+        int altura = icone.getIconHeight();
 
-        this.icone = icone;
-        this.largura = icone.getIconWidth();
-        this.altura = icone.getIconHeight();
-        this.posicaoY = posicaoY;
-        this.posicaoX = posicaoX;
-
-        botaoClicavel = new JButton(icone);
-        botaoClicavel.setBounds(posicaoX, posicaoY, largura, altura);
-
-        botaoClicavel.setBorderPainted(false);
-        botaoClicavel.setContentAreaFilled(false);
-        botaoClicavel.setFocusPainted(false);
-        botaoClicavel.setOpaque(false);
-        botaoClicavel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        this.botaoClicavel = new JButton(icone);
+        this.botaoClicavel.setBounds(posicaoX, posicaoY, largura, altura);
+        configuracoesPadrao();
     }
-    
-    //Outro construtor que não pede um ícone como parâmetro 
-    public Botao(int largura, int altura, int posicaoX,int posicaoY){
-        this.largura = icone.getIconWidth();
-        this.altura = icone.getIconHeight();
-        this.posicaoY = posicaoY;
-        this.posicaoX = posicaoX;
 
-        botaoClicavel = new JButton(icone);
-        botaoClicavel.setBounds(posicaoX, posicaoY, largura, altura);
-
-        botaoClicavel.setBorderPainted(false);
-        botaoClicavel.setContentAreaFilled(false);
-        botaoClicavel.setFocusPainted(false);
-        botaoClicavel.setOpaque(false);
-        botaoClicavel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+    public Botao(int largura, int altura, int posicaoX, int posicaoY) {
+        this.botaoClicavel = new JButton();
+        this.botaoClicavel.setBounds(posicaoX, posicaoY, largura, altura);
+        configuracoesPadrao();
     }
-    public void configuracoesPadrao(){
-        this.getBotaoClicavel().setBorderPainted(false);
-        this.getBotaoClicavel().setContentAreaFilled(false);
-        this.getBotaoClicavel().setFocusPainted(false);
+
+
+    private void configuracoesPadrao() {
+        this.botaoClicavel.setBorderPainted(true);
+        this.botaoClicavel.setContentAreaFilled(false);
+        this.botaoClicavel.setFocusPainted(false);
+        this.botaoClicavel.setOpaque(false);
+        this.botaoClicavel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    public void addActionListener(ActionListener acao) {
+        this.botaoClicavel.addActionListener(acao);
     }
 
     public JButton getBotaoClicavel() {
