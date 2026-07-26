@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F8FAFC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container-fundo {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    background-image: url('assets/undf-conecta-home.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btn-invisivel {
+    position: absolute;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    /* Se quiser VER os botões para ajustar, descomente a linha abaixo: */
+    /*background: rgba(255, 0, 0, 0.3); */
+}
+/*320, 260, 128, 313*/
+/*208, 912*/
+#btn1 {
+    width: 260px;
+    height: 210px;
+    left: 230px;
+    top: 320px;
+}
+
+#btn2 {
+    width: 260px;
+    height: 210px;
+    left: 510px;
+    top: 320px;
+}
+
+#btn3 {
+     width: 260px;
+    height: 210px;
+    left: 790px;
+    top: 320px;
+}
