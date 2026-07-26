@@ -5,28 +5,35 @@
 }
 
 body {
-    background-color: #F8FAFC;
+    /* Ocupa no mínimo 100% da altura da tela visível */
+    min-height: 100vh;
+    
+    /* Configura o Flexbox vertical */
     display: flex;
-    justify-content: center; 
-    align-items: center;     
-    min-height: 100vh;     
-    overflow: hidden;      
-
+    flex-direction: column;
+    
+    /* Garante que o conteúdo ocupe toda a largura */
+    width: 100%;
+    
+    /* Reseta margens padrão e define fundo e fonte global */
+    margin: 0;
+    background-color: #F8FAFC;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-.container-fundo {
+/*.container-fundo {
     position: relative; 
     
    
     width: 1280px; 
     height: 720px;
     
-    background-image: url('assets/undf-conecta-home.png');
+    /*background-image: url('assets/undf-conecta-home.png');
     background-size: contain; 
     background-repeat: no-repeat;
     background-position: center; 
     
    
-}
+}*/
 
 
 .btn-invisivel {

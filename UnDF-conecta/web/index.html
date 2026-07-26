@@ -4,15 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnDF Conecta</title>
+    <link rel="icon" type="image/png" href="assets/favicon-container.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container-fundo">
-        <button id="btn1" class="btn-invisivel"></button>
-        <button id="btn2" class="btn-invisivel"></button>
-        <button id="btn3" class="btn-invisivel"></button>
-    </div>
+    <!-- Header / Cabeçalho -->
+    <header class="header">
+        <span class="portal-tag">● PORTAL DE SERVIÇOS ACADÊMICOS</span>
+        <div class="user-profile">
+            <span>Ana Silva Santos</span>
+            <img src="https://i.pravatar.cc/40?img=5" alt="Foto do usuário" class="avatar">
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-container">
+        
+        <!-- Logo Principal -->
+        <div class="logo-area">
+            <h1>UnDF <span>conecta</span></h1>
+            <p>Universidade do Distrito Federal Jorge Amaury</p>
+        </div>
+
+        <!-- Grade de Cartões Interativos -->
+        <div class="cards-grid">
+            
+            <button id="btn-forum" class="card">
+                <span class="badge">NOVO</span>
+                <div class="icon-box">💬</div>
+                <h3>Fórum</h3>
+                <p>Participe de discussões acadêmicas, tire dúvidas e conecte-se com sua turma.</p>
+            </button>
+
+            <button id="btn-calendario" class="card">
+                <div class="icon-box">📅</div>
+                <h3>Calendário</h3>
+                <p>Acompanhe datas de provas, entregas de trabalhos e eventos institucionais.</p>
+            </button>
+
+            <button id="btn-avaliacao" class="card">
+                <span class="badge pendente">PENDENTE</span>
+                <div class="icon-box">📋</div>
+                <h3>Avaliação Institucional</h3>
+                <p>Sua opinião constrói a nossa universidade. Responda aos questionários pendentes.</p>
+            </button>
+
+        </div>
+
+    </main>
+
+    <!-- Footer / Rodapé -->
+    <footer class="footer">
+        <p>© 2026 Universidade do Distrito Federal - UnDF. Todos os direitos reservados.</p>
+        <p>Diretoria de Tecnologia da Informação e Comunicação · Versão 1.4.0</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
