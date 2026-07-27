@@ -35,6 +35,29 @@ body {
    
 }*/
 
+.portal-tag {
+    display: flex;
+    align-items: center; /* Alinha o quadradinho no meio da altura do texto */
+    gap: 8px;           /* Espaço exato entre o quadradinho e o texto */
+    
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748B;     /* Cor do texto em cinza */
+    letter-spacing: 0.5px;
+}
+
+.texto-tag {
+    color: #64748B;
+    font-size: 9.6px;
+}
+
+.icone-quadrado {
+    width: 12px;         /* Largura do quadradinho */
+    height: 12px;        /* Altura do quadradinho */
+    background-color: #0F2C59; /* Cor azul escuro igual ao Figma */
+    border-radius: 3px;  /* Cantos levemente arredondados */
+    display: inline-block;
+}
 
 .btn-invisivel {
     position: absolute; 
