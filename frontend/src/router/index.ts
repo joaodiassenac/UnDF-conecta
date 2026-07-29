@@ -4,6 +4,7 @@ import Home from '../views/home.vue'
 import LoginLayout from '@/loginLayout.vue'
 import MainLayout from '../mainLayout.vue'
 import Login from '../views/login.vue'
+import Calendario from '../views/calendario.vue'
 
 const routes = [
     {
@@ -26,6 +27,11 @@ const routes = [
                 name: 'home',
                 component: Home
             },
+            {
+                path: 'calendario', // 👈 2. Rota do Calendário
+                name: 'calendario',
+                component: Calendario
+            }
         ]
     }
 ]
