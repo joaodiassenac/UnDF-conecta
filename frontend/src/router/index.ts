@@ -6,6 +6,7 @@ import MainLayout from '../mainLayout.vue'
 import Login from '../views/login.vue'
 import Calendario from '../views/calendario.vue'
 import Forum from '@/views/forum.vue'
+import Avaliacao from '../views/avaliacao.vue'
 
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
                 path: 'forum',
                 name: 'forum',
                 component: Forum
+            },
+            {
+                path: 'avaliacao',
+                name: 'avaliacao',
+                component: Avaliacao
             }
         ]
     }
