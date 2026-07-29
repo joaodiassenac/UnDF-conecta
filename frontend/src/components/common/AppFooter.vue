@@ -10,9 +10,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  institution: 'Universidade do Distrito Federal - UnDF',
-  department: 'Diretoria de Tecnologia da Informação e Comunicação',
-  version: '1.4.0',
+  version: '1.0.0',
 })
 
 const year = new Date().getFullYear()
@@ -21,7 +19,7 @@ const year = new Date().getFullYear()
 <template>
   <v-footer color="background" class="app-footer flex-column py-6">
     <p class="text-caption text-center mb-1 app-footer__line">
-      © {{ year }} {{ institution }}. Todos os direitos reservados.
+      © Todos os direitos reservados.
     </p>
     <p class="text-caption text-center app-footer__line app-footer__line--muted">
       {{ department }} · Versão {{ version }}
