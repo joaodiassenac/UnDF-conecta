@@ -5,6 +5,7 @@ import LoginLayout from '@/loginLayout.vue'
 import MainLayout from '../mainLayout.vue'
 import Login from '../views/login.vue'
 import Calendario from '../views/calendario.vue'
+import CalendarioTeste from '../views/calendario-teste.vue'
 
 const routes = [
     {
@@ -28,9 +29,9 @@ const routes = [
                 component: Home
             },
             {
-                path: 'calendario', // 👈 2. Rota do Calendário
+                path: 'calendario',
                 name: 'calendario',
-                component: Calendario
+                component: CalendarioTeste
             }
         ]
     }
