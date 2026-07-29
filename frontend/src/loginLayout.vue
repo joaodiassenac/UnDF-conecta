@@ -2,10 +2,10 @@
 
 </script>
 <template>
-<P>home</P>
+ <v-app>
+    <router-view />
+  </v-app>
 </template>
 <style scoped>
-P{
-    background-color: white;
-}
+
 </style>
