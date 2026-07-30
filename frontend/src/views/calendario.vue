@@ -4,16 +4,101 @@
       
       
       <v-col cols="12" md="2">
-        <v-btn
-          color="primary"
-          block
-          size="large"
-          prepend-icon="mdi-plus"
-          class="text-none mb-6 rounded-lg elevation-2"
-        >
-          Solicitar Auditório
-        </v-btn>
+            <v-btn
+              color="primary"
+              block
+              size="large"
+              prepend-icon="mdi-plus"
+              class="text-none mb-6 rounded-lg elevation-2"
+              @click="dialogSolicitar = true"
+            >
+              Solicitar Auditório
+            </v-btn>
+          
+          <!-- MODAL DE SOLICITAÇÃO DE AUDITÓRIO -->
+          <v-dialog v-model="dialogSolicitar" max-width="500px">
+            <v-card class="rounded-xl pa-2">
+              <v-card-title class="d-flex justify-space-between align-center pa-4">
+                <span class="text-h6 font-weight-bold">Solicitar Auditório</span>
+                <v-btn icon="mdi-close" variant="text" density="compact" @click="dialogSolicitar = false"></v-btn>
+              </v-card-title>
 
+              <v-card-text class="pa-4">
+                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Título do Evento</label>
+                <v-text-field
+                  v-model="novoEvento.titulo"
+                  placeholder="Ex: Palestra sobre IA"
+                  variant="outlined"
+                  density="compact"
+                  class="mb-3 rounded-lg"
+                ></v-text-field>
+
+                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
+                <v-select
+                  v-model="novoEvento.categoria"
+                  :items="['Acadêmico', 'Administrativo', 'Auditórios', 'Eventos', 'Palestras']"
+                  placeholder="Selecione a categoria"
+                  variant="outlined"
+                  density="compact"
+                  class="mb-3 rounded-lg"
+                ></v-select>
+
+                <v-row density="compact">
+                  <v-col cols="6">
+                    <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Data</label>
+                    <v-text-field
+                      v-model="novoEvento.data"
+                      type="date"
+                      variant="outlined"
+                      density="compact"
+                      class="mb-3 rounded-lg"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6">
+                    <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Horário</label>
+                    <v-text-field
+                      v-model="novoEvento.horario"
+                      placeholder="14:00 - 16:00"
+                      variant="outlined"
+                      density="compact"
+                      class="mb-3 rounded-lg"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Local / Auditório</label>
+                <v-text-field
+                  v-model="novoEvento.local"
+                  placeholder="Ex: Auditório B, Prédio Central"
+                  variant="outlined"
+                  density="compact"
+                  class="mb-3 rounded-lg"
+                ></v-text-field>
+
+                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Responsável</label>
+                <v-text-field
+                  v-model="novoEvento.responsavel"
+                  placeholder="Ex: Prof. Carlos Eduardo"
+                  variant="outlined"
+                  density="compact"
+                  class="rounded-lg"
+                ></v-text-field>
+              </v-card-text>
+
+              <v-card-actions class="pa-4 pt-0 d-flex justify-end gap-2">
+                <v-btn variant="text" class="text-none" @click="dialogSolicitar = false">Cancelar</v-btn>
+                <v-btn
+                  color="primary"
+                  variant="flat"
+                  class="text-none font-weight-bold rounded-lg px-6"
+                  :disabled="!novoEvento.titulo || !novoEvento.data || !novoEvento.categoria"
+                  @click="agendarEvento"
+                >
+                  Agendar
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
        
         <v-card variant="outlined" class="pa-3 mb-6 bg-white rounded-lg border">
           <div class="d-flex align-center justify-space-between mb-1">
@@ -102,30 +187,24 @@
           <v-btn variant="text" color="primary" density="compact" class="text-none">Ver todos</v-btn>
         </div>
 
-      
-        <v-card class="mb-3 pa-3 rounded-lg border elevation-0 bg-white">
-          <v-chip color="blue" size="x-small" label class="mb-2 font-weight-bold">ACADÊMICO</v-chip>
-          <div class="font-weight-bold text-subtitle-2 mb-1">Defesa de TCC - Engenharia Civil</div>
+        <!-- Lista de Eventos Dinâmica -->
+        <v-card 
+          v-for="evt in listaEventos" 
+          :key="evt.id" 
+          class="mb-3 pa-3 rounded-lg border elevation-0 bg-white"
+        >
+          <v-chip :color="obterCorCategoria(evt.categoria)" size="x-small" label class="mb-2 font-weight-bold">
+            {{ evt.categoria.toUpperCase() }}
+          </v-chip>
+          <div class="font-weight-bold text-subtitle-2 mb-1">{{ evt.titulo }}</div>
           <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
-            <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> 08 Julho, 14:00 - 16:00
+            <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> {{ evt.dataFormatted }}, {{ evt.horario }}
           </div>
           <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
-            <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> Auditório B, Prédio Central
+            <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> {{ evt.local }}
           </div>
-          <div class="text-caption text-grey-darken-1 d-flex align-center">
-            <v-icon size="14" class="mr-1">mdi-account-outline</v-icon> Prof. Carlos Eduardo
-          </div>
-        </v-card>
-
-        
-        <v-card class="mb-3 pa-3 rounded-lg border elevation-0 bg-white">
-          <v-chip color="orange" size="x-small" label class="mb-2 font-weight-bold">ADMINISTRATIVO</v-chip>
-          <div class="font-weight-bold text-subtitle-2 mb-1">Reunião Conselho Administrativo</div>
-          <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
-            <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> 08 Julho, 09:30 - 12:00
-          </div>
-          <div class="text-caption text-grey-darken-1 d-flex align-center">
-            <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> Sala de Reuniões, Reitoria
+          <div v-if="evt.responsavel" class="text-caption text-grey-darken-1 d-flex align-center">
+            <v-icon size="14" class="mr-1">mdi-account-outline</v-icon> {{ evt.responsavel }}
           </div>
         </v-card>
       </v-col>
@@ -152,7 +231,28 @@ interface CalendarDay {
   events: CalendarEvent[]
 }
 
+interface EventoCompleto {
+  id: number
+  titulo: string
+  categoria: string
+  data: string
+  dataFormatted: string
+  horario: string
+  local: string
+  responsavel?: string
+}
+
 const viewType = ref('mes')
+const dialogSolicitar = ref(false)
+
+const novoEvento = ref({
+  titulo: '',
+  categoria: 'Auditórios',
+  data: '',
+  horario: '',
+  local: '',
+  responsavel: ''
+})
 
 const categories = ref({
   academico: true,
@@ -166,6 +266,28 @@ const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const currentDate = ref(new Date())
 const selectedDate = ref<Date | null>(new Date())
 
+// Eventos iniciais de exemplo
+const listaEventos = ref<EventoCompleto[]>([
+  {
+    id: 1,
+    titulo: 'Defesa de TCC - Engenharia Civil',
+    categoria: 'Acadêmico',
+    data: '2026-07-08',
+    dataFormatted: '08 Julho',
+    horario: '14:00 - 16:00',
+    local: 'Auditório B, Prédio Central',
+    responsavel: 'Prof. Carlos Eduardo'
+  },
+  {
+    id: 2,
+    titulo: 'Reunião Conselho Administrativo',
+    categoria: 'Administrativo',
+    data: '2026-07-08',
+    dataFormatted: '08 Julho',
+    horario: '09:30 - 12:00',
+    local: 'Sala de Reuniões, Reitoria'
+  }
+])
 
 const currentMonthYear = computed(() => {
   return currentDate.value.toLocaleDateString('pt-BR', {
@@ -174,6 +296,16 @@ const currentMonthYear = computed(() => {
   }).replace(/^\w/, (c) => c.toUpperCase())
 })
 
+function obterCorCategoria(cat: string) {
+  const cores: Record<string, string> = {
+    'Acadêmico': 'blue',
+    'Administrativo': 'orange',
+    'Auditórios': 'teal',
+    'Eventos': 'grey',
+    'Palestras': 'purple'
+  }
+  return cores[cat] || 'primary'
+}
 
 const calendarDays = computed(() => {
   const days: CalendarDay[] = []
@@ -187,14 +319,12 @@ const calendarDays = computed(() => {
   const totalDays = lastDayOfMonth.getDate()
   const today = new Date()
 
-
   const prevMonthLastDay = new Date(year, month, 0).getDate()
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
     const date = new Date(year, month - 1, prevMonthLastDay - i)
     days.push(createDayObject(date, false, today))
   }
 
- 
   for (let d = 1; d <= totalDays; d++) {
     const date = new Date(year, month, d)
     days.push(createDayObject(date, true, today))
@@ -215,13 +345,27 @@ function createDayObject(date: Date, isCurrentMonth: boolean, today: Date): Cale
     d1.getMonth() === d2.getMonth() &&
     d1.getFullYear() === d2.getFullYear()
 
+  // Conecta os eventos da lista com as células do calendário
+  const eventosDoDia = listaEventos.value
+    .filter(e => {
+      const parts = e.data.split('-')
+      if (parts.length !== 3) return false
+      const eDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+      return isSameDay(eDate, date)
+    })
+    .map(e => ({
+      id: e.id,
+      title: e.titulo,
+      color: obterCorCategoria(e.categoria)
+    }))
+
   return {
     date,
     dateNumber: date.getDate(),
     isCurrentMonth,
     isToday: isSameDay(date, today),
     isSelected: selectedDate.value ? isSameDay(date, selectedDate.value) : false,
-    events: []
+    events: eventosDoDia
   }
 }
 
@@ -240,6 +384,28 @@ function goToToday() {
 
 function selectDate(day: CalendarDay) {
   selectedDate.value = day.date
+}
+
+function agendarEvento() {
+  if (!novoEvento.value.titulo || !novoEvento.value.data || !novoEvento.value.categoria) return
+
+  const [ano, mes, dia] = novoEvento.value.data.split('-')
+  const dateObj = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia))
+  const dataFormatted = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })
+
+  listaEventos.value.unshift({
+    id: Date.now(),
+    titulo: novoEvento.value.titulo,
+    categoria: novoEvento.value.categoria,
+    data: novoEvento.value.data,
+    dataFormatted: dataFormatted,
+    horario: novoEvento.value.horario || 'Dia Inteiro',
+    local: novoEvento.value.local || 'Auditório Central',
+    responsavel: novoEvento.value.responsavel
+  })
+
+  novoEvento.value = { titulo: '', categoria: 'Auditórios', data: '', horario: '', local: '', responsavel: '' }
+  dialogSolicitar.value = false
 }
 </script>
 
