@@ -98,6 +98,53 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <!-- COLE O NOVO MODAL LOGO AQUI DEBAIXO (AINDA DENTRO DO TEMPLATE) -->
+            <v-dialog v-model="dialogVerTodos" max-width="650px" scrollable>
+              <v-card class="rounded-xl pa-2">
+                <v-card-title class="d-flex justify-space-between align-center pa-4 pb-2">
+                  <span class="text-h6 font-weight-bold">Todos os Próximos Eventos</span>
+                  <v-btn icon="mdi-close" variant="text" density="compact" @click="dialogVerTodos = false"></v-btn>
+                </v-card-title>
+
+                <v-card-text class="pa-4" style="max-height: 450px;">
+                  <div v-if="eventosFiltrados.length === 0" class="text-center py-6 text-grey-darken-1">
+                    <v-icon size="40" class="mb-2">mdi-calendar-remove</v-icon>
+                    <p>Nenhum evento encontrado para os filtros selecionados.</p>
+                  </div>
+
+                  <v-card 
+                    v-for="evt in eventosFiltrados" 
+                    :key="evt.id" 
+                    class="mb-3 pa-3 rounded-lg border elevation-0 bg-white"
+                  >
+                    <div class="d-flex justify-space-between align-center mb-1">
+                      <v-chip :color="obterCorCategoria(evt.categoria)" size="x-small" label class="font-weight-bold">
+                        {{ evt.categoria.toUpperCase() }}
+                      </v-chip>
+                      <span class="text-caption text-grey-darken-1 font-weight-bold">{{ evt.dataFormatted }}</span>
+                    </div>
+
+                    <div class="font-weight-bold text-subtitle-2 mb-1">{{ evt.titulo }}</div>
+                    
+                    <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
+                      <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> {{ evt.horario }}
+                    </div>
+                    <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
+                      <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> {{ evt.local }}
+                    </div>
+                    <div v-if="evt.responsavel" class="text-caption text-grey-darken-1 d-flex align-center">
+                      <v-icon size="14" class="mr-1">mdi-account-outline</v-icon> {{ evt.responsavel }}
+                    </div>
+                  </v-card>
+                </v-card-text>
+
+                <v-card-actions class="pa-4 pt-0 d-flex justify-end">
+                  <v-btn color="primary" variant="flat" class="text-none rounded-lg px-6" @click="dialogVerTodos = false">
+                    Fechar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
         
           <v-card variant="outlined" class="pa-3 mb-6 bg-white rounded-lg border">
             <div class="d-flex align-center justify-space-between mb-1">
@@ -181,7 +228,7 @@
         <v-col cols="12" md="3">
           <div class="d-flex align-center justify-space-between mb-4">
             <span class="font-weight-bold text-subtitle-1">Próximos Eventos</span>
-            <v-btn variant="text" color="primary" density="compact" class="text-none">Ver todos</v-btn>
+            <v-btn variant="text" color="primary" density="compact" class="text-none" @click="dialogVerTodos = true">Ver todos</v-btn>
           </div>
 
           <v-card 
@@ -243,6 +290,7 @@ interface EventoCompleto {
 
 const viewType = ref('mes')
 const dialogSolicitar = ref(false)
+const dialogVerTodos = ref(false)
 
 const novoEvento = ref({
   titulo: '',
