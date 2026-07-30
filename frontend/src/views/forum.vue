@@ -196,14 +196,14 @@
                 <v-btn
                   variant="text"
                   density="compact"
-                  prepend-icon="mdi-heart-outline"
-                  class="text-caption text-grey-darken-1"
+                  :prepend-icon="post.curtido ? 'mdi-heart' : 'mdi-heart-outline'"
+                  :color="post.curtido ? 'red' : 'grey-darken-1'"
+                  class="text-caption font-weight-bold"
                   @click="votar(post.id)"
                 >
                   {{ post.votos }}
                 </v-btn>
 
-                <!-- Botão de Comentário atualizado com o @click para abrir/fechar -->
                 <v-btn
                   variant="text"
                   density="compact"
@@ -273,6 +273,29 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+interface Comentario {
+  id: number
+  autor: string
+  data: string
+  texto: string
+}
+
+interface Post {
+  id: number
+  autor: string
+  dataCriacao: string
+  titulo: string
+  conteudo: string
+  categoria: string
+  status?: string
+  votos: number
+  comentariosCount: number
+  curtido?: boolean
+  mostrarComentarios?: boolean
+  novoComentario?: string
+  comentarios?: Comentario[]
+}
+
 const searchQuery = ref('')
 const categoriaSelecionada = ref('Todas')
 const ordenacaoSelecionada = ref('recents')
@@ -285,7 +308,7 @@ const novaPublicacao = ref({
 
 const categorias = ref(['Todas', 'Infraestrutura', 'Ensino', 'RU', 'Tecnologia', 'Eventos'])
 
-const publicacoes = ref([
+const publicacoes = ref<Post[]>([
   {
     id: 1,
     autor: 'Camila R.',
@@ -342,7 +365,15 @@ const publicacoesFiltradas = computed(() => {
 
 function votar(postId: number) {
   const post = publicacoes.value.find(p => p.id === postId)
-  if (post) post.votos++
+  if (!post) return
+
+  post.curtido = !post.curtido
+
+  if (post.curtido) {
+    post.votos++
+  } else {
+    post.votos--
+  }
 }
 
 function publicarPost() {
@@ -368,12 +399,10 @@ function publicarPost() {
 function adicionarComentario(post: any) {
   if (!post.novoComentario || !post.novoComentario.trim()) return
 
-  // Garante que a lista de comentários existe
   if (!post.comentarios) {
     post.comentarios = []
   }
 
-  // Adiciona o comentário enviado
   post.comentarios.push({
     id: Date.now(),
     autor: 'Ana Silva Santos',
@@ -381,7 +410,6 @@ function adicionarComentario(post: any) {
     texto: post.novoComentario.trim()
   })
 
-  // Aumenta o contador e limpa o input
   post.comentariosCount++
   post.novoComentario = ''
 }
