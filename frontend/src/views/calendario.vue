@@ -12,7 +12,7 @@
                 class="text-none mb-6 rounded-lg elevation-2"
                 @click="dialogSolicitar = true"
               >
-                Solicitar Auditório
+                Agendar evento
               </v-btn>
             
             <v-dialog v-model="dialogSolicitar" max-width="500px">

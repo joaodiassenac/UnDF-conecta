@@ -56,7 +56,7 @@ const currentUser = {
       <v-container class="home-view__content" max-width="1100">
         <HomeHero
           title="Open Campus"
-          subtitle="Universidade do Distrito Federal Jorge Amaury (UnDF)"
+          subtitle="Universidade do Distrito Federal&#10;Professor Jorge Amaury Maia Nunes"
         />
 
         <v-row justify="center">
