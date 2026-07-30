@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//
-// ENUMS
-//
-
-enum Role {
-  ESTUDANTE
-  ADMIN
-}
-
 enum StatusPublicacao {
   PENDENTE
   EM_ANALISE
@@ -35,41 +26,15 @@ enum TipoPergunta {
 }
 
 //
-// USUÁRIOS
-//
-
-model Usuario {
-  id         Int      @id @default(autoincrement())
-  nome       String
-  matricula  String   @unique
-  email      String?  @unique
-  curso      String
-  campus     String
-  role       Role     @default(ESTUDANTE)
-
-  criadoEm   DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
-
-  eventosCriados Event[]
-  presencas      ConfirmacaoPresenca[]
-
-  publicacoes ForumPost[]
-  comentarios ForumComment[]
-  votos       ForumVote[]
-
-  avaliacoes Avaliacao[]
-}
-
-//
 // CALENDÁRIO
 //
 
 model CategoriaEvento {
-  id        Int    @id @default(autoincrement())
-  nome      String @unique
-  cor       String
+  id      Int    @id @default(autoincrement())
+  nome    String @unique
+  cor     String
 
-  eventos   Event[]
+  eventos Event[]
 }
 
 model Event {
@@ -88,8 +53,7 @@ model Event {
   categoriaId   Int
   categoria     CategoriaEvento @relation(fields: [categoriaId], references: [id])
 
-  criadoPorId   Int
-  criadoPor     Usuario @relation(fields: [criadoPorId], references: [id])
+  criadoPorNome String
 
   presencas     ConfirmacaoPresenca[]
 
@@ -101,17 +65,12 @@ model Event {
 }
 
 model ConfirmacaoPresenca {
-  id         Int @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
 
-  eventoId   Int
-  usuarioId  Int
-
-  evento      Event    @relation(fields: [eventoId], references: [id], onDelete: Cascade)
-  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  eventoId     Int
+  evento       Event    @relation(fields: [eventoId], references: [id], onDelete: Cascade)
 
   confirmadoEm DateTime @default(now())
-
-  @@unique([eventoId, usuarioId])
 }
 
 //
@@ -119,31 +78,32 @@ model ConfirmacaoPresenca {
 //
 
 model ForumCategoria {
-  id      Int    @id @default(autoincrement())
-  nome    String @unique
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
 
-  posts   ForumPost[]
+  posts ForumPost[]
 }
 
 model ForumPost {
-  id            Int @id @default(autoincrement())
+  id           Int @id @default(autoincrement())
 
-  titulo        String
-  conteudo      String @db.Text
+  titulo       String
+  conteudo     String @db.Text
 
-  categoriaId   Int
-  categoria      ForumCategoria @relation(fields: [categoriaId], references: [id])
+  categoriaId  Int
+  categoria    ForumCategoria @relation(fields: [categoriaId], references: [id])
 
-  autorId       Int
-  autor         Usuario @relation(fields: [autorId], references: [id])
+  autorNome    String
+  autorCurso   String?
+  autorCampus  String?
 
-  status        StatusPublicacao @default(PENDENTE)
+  status       StatusPublicacao @default(PENDENTE)
 
-  comentarios   ForumComment[]
-  votos         ForumVote[]
+  comentarios  ForumComment[]
+  votos        ForumVote[]
 
-  criadoEm      DateTime @default(now())
-  atualizadoEm  DateTime @updatedAt
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
 
   @@index([categoriaId])
   @@index([status])
@@ -153,32 +113,25 @@ model ForumComment {
   id         Int @id @default(autoincrement())
 
   conteudo   String @db.Text
-
   oficial    Boolean @default(false)
 
-  postId      Int
-  autorId     Int
+  postId     Int
+  post       ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  post        ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  autor       Usuario   @relation(fields: [autorId], references: [id])
+  autorNome  String
 
-  criadoEm    DateTime @default(now())
+  criadoEm   DateTime @default(now())
 }
 
 model ForumVote {
-  id         Int @id @default(autoincrement())
+  id       Int @id @default(autoincrement())
 
-  tipo       TipoVoto @default(CURTIDA)
+  tipo     TipoVoto @default(CURTIDA)
 
-  postId     Int
-  usuarioId  Int
+  postId   Int
+  post     ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  post        ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  usuario     Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
-  criadoEm    DateTime @default(now())
-
-  @@unique([postId, usuarioId])
+  criadoEm DateTime @default(now())
 }
 
 //
@@ -186,78 +139,66 @@ model ForumVote {
 //
 
 model Questionario {
-  id          Int @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
 
-  titulo      String
-  descricao   String?
+  titulo     String
+  descricao  String?
 
-  inicio      DateTime
-  fim         DateTime
+  inicio     DateTime
+  fim        DateTime
 
-  perguntas   Pergunta[]
-  avaliacoes  Avaliacao[]
+  perguntas  Pergunta[]
+  avaliacoes Avaliacao[]
 
-  criadoEm    DateTime @default(now())
+  criadoEm   DateTime @default(now())
 }
 
 model Pergunta {
   id             Int @id @default(autoincrement())
 
   enunciado      String
-
   tipo           TipoPergunta
 
   questionarioId Int
-
   questionario   Questionario @relation(fields: [questionarioId], references: [id], onDelete: Cascade)
 
   opcoes         OpcaoPergunta[]
-
   respostas      Resposta[]
 }
 
 model OpcaoPergunta {
-  id          Int @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
 
-  texto       String
+  texto      String
 
-  perguntaId  Int
-
-  pergunta    Pergunta @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
+  perguntaId Int
+  pergunta   Pergunta @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
 }
 
 model Avaliacao {
-  id              Int @id @default(autoincrement())
+  id             Int @id @default(autoincrement())
 
-  usuarioId       Int
-  questionarioId  Int
+  questionarioId Int
+  questionario   Questionario @relation(fields: [questionarioId], references: [id])
 
-  usuario         Usuario @relation(fields: [usuarioId], references: [id])
+  respostas      Resposta[]
 
-  questionario    Questionario @relation(fields: [questionarioId], references: [id])
-
-  respostas       Resposta[]
-
-  enviadaEm       DateTime @default(now())
-
-  @@unique([usuarioId, questionarioId])
+  enviadaEm      DateTime @default(now())
 }
 
 model Resposta {
-  id            Int @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
 
-  avaliacaoId   Int
-  perguntaId    Int
+  avaliacaoId Int
+  avaliacao   Avaliacao @relation(fields: [avaliacaoId], references: [id], onDelete: Cascade)
 
-  nota          Int?
-  texto         String? @db.Text
-  opcaoId       Int?
+  perguntaId  Int
+  pergunta    Pergunta @relation(fields: [perguntaId], references: [id])
 
-  avaliacao     Avaliacao @relation(fields: [avaliacaoId], references: [id], onDelete: Cascade)
-
-  pergunta       Pergunta @relation(fields: [perguntaId], references: [id])
-
-  opcao          OpcaoPergunta? @relation(fields: [opcaoId], references: [id])
+  nota        Int?
+  texto       String? @db.Text
+  opcaoId     Int?
+  opcao       OpcaoPergunta? @relation(fields: [opcaoId], references: [id])
 }
 
 //
@@ -265,26 +206,38 @@ model Resposta {
 //
 
 model Enquete {
-  id         Int @id @default(autoincrement())
+  id       Int @id @default(autoincrement())
 
-  pergunta   String
+  pergunta String
 
-  inicio     DateTime
-  fim        DateTime
+  inicio   DateTime
+  fim      DateTime
 
-  opcoes     OpcaoEnquete[]
+  opcoes   OpcaoEnquete[]
+  votos    VotoEnquete[]
 
-  criadaEm   DateTime @default(now())
+  criadaEm DateTime @default(now())
 }
 
 model OpcaoEnquete {
-  id          Int @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
 
-  texto       String
+  texto     String
 
-  votos       Int @default(0)
+  enqueteId Int
+  enquete   Enquete @relation(fields: [enqueteId], references: [id], onDelete: Cascade)
 
-  enqueteId   Int
+  votos     VotoEnquete[]
+}
 
-  enquete     Enquete @relation(fields: [enqueteId], references: [id], onDelete: Cascade)
+model VotoEnquete {
+  id        Int @id @default(autoincrement())
+
+  enqueteId Int
+  enquete   Enquete @relation(fields: [enqueteId], references: [id], onDelete: Cascade)
+
+  opcaoId   Int
+  opcao     OpcaoEnquete @relation(fields: [opcaoId], references: [id], onDelete: Cascade)
+
+  criadoEm  DateTime @default(now())
 }
