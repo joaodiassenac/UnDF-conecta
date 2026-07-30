@@ -1,5 +1,5 @@
 <template>
-  <AppHeader portal-label="Open Campus" module-label="Fórum" />
+  <AppHeader portal-label="Open Campus" module-label="Fórum" @toggle-menu="$emit('toggle-menu')" />
   <v-main>
     <v-container fluid class="pa-0 bg-grey-lighten-4 fill-height align-start">
       <v-dialog v-model="dialogNovaPublicacao" max-width="600px">

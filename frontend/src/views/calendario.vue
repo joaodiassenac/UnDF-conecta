@@ -1,5 +1,5 @@
 <template>
-   <AppHeader portal-label="Open Campus" module-label="Calendário de Eventos"/>   
+   <AppHeader portal-label="Open Campus" module-label="Calendário de Eventos" @toggle-menu="$emit('toggle-menu')"/>   
   <v-main>
     <v-container fluid class="pa-6 bg-grey-lighten-4">
       <v-row>

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { toggleSidebar } from '@/stores/sidebar'
+
+defineEmits(['toggle-menu'])
+
 interface Props {
   portalLabel?: string
   moduleLabel?: string
@@ -11,12 +15,13 @@ withDefaults(defineProps<Props>(), {
   moduleLabel: 'Calendário de Eventos',
   userName: 'Ana Silva Santos'
 })
+
 </script>
 
 <template>
   <v-app-bar app flat color="background" class="app-header px-8" height="72">
     <div class="d-flex align-center gap-2">
-      <div class="bg-blue-darken-4 rounded" style="width: 16px; height: 16px;"></div>
+      <v-btn icon="mdi-menu" variant="text" color="#0F2A4A" class="mr-1" @click="toggleSidebar"></v-btn>
       <span class="font-weight-bold text-subtitle-1 text-grey-darken-4">{{ portalLabel }}</span>
       
       <template v-if="moduleLabel">

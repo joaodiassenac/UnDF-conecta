@@ -1,11 +1,9 @@
 <template>
-  <AppHeader portal-label="Open Campus" module-label="Avaliação institucional"/>
+  <AppHeader portal-label="Open Campus" module-label="Avaliação institucional" @toggle-menu="$emit('toggle-menu')"/>
   <v-main class="w-100 bg-grey-lighten-4">
     <v-container fluid class="pa-0 bg-grey-lighten-4 fill-height align-start">
       <v-container fluid class="pa-6">
         <v-row>
-          <!-- MENU LATERAL + PROGRESSO -->
-         <!-- COLUNA LATERAL (MENU + CARDS) -->
           <v-col cols="12" md="3">
             <!-- Menu de Navegação -->
             <v-card variant="flat" class="pa-2 mb-4 bg-transparent">

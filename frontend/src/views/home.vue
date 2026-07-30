@@ -50,7 +50,7 @@ const currentUser = {
 
 <template>
   <div class="home-view">
-    <AppHeader portal-label="Open Campus" module-label="Home"/>
+    <AppHeader portal-label="Open Campus" module-label="Home" @toggle-menu="$emit('toggle-menu')"/>
 
     <v-main class="bg-background">
       <v-container class="home-view__content" max-width="1100">
