@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/**
- * Home
- * Tela inicial (dashboard) do Open Campus.
- * Responsabilidade única: definir os dados dos módulos e montar o layout.
- * Toda a apresentação visual fica delegada aos componentes filhos.
- */
 import AppHeader from '@/components/common/AppHeader.vue'
 import AppFooter from '@/components/common/AppFooter.vue'
 import HomeHero from '@/components/home/HomeHero.vue'
@@ -20,10 +14,6 @@ interface HomeModule {
   badgeColor?: string
 }
 
-// Fonte única dos módulos exibidos na Home.
-// Novos módulos (ex.: Editais, Oportunidades) entram aqui como abas
-// dentro das telas de Calendário/Avaliação, conforme definido no
-// Plano de Escopo — não como novos cards na Home.
 const modules: HomeModule[] = [
   {
     key: 'forum',
@@ -52,8 +42,6 @@ const modules: HomeModule[] = [
   },
 ]
 
-// TODO: substituir por dado real do usuário autenticado (store de auth)
-// quando o módulo de autenticação for retomado.
 const currentUser = {
   name: 'Ana Silva Santos',
   avatarUrl: undefined,
@@ -62,7 +50,7 @@ const currentUser = {
 
 <template>
   <div class="home-view">
-    <AppHeader :user-name="currentUser.name" :user-avatar-url="currentUser.avatarUrl" />
+    <AppHeader portal-label="Open Campus" module-label="Home"/>
 
     <v-main class="bg-background">
       <v-container class="home-view__content" max-width="1100">

@@ -1,220 +1,220 @@
 <template>
-  <v-container fluid class="pa-6 bg-grey-lighten-4 fill-height align-start">
-    <v-row>
-      
-      
-      <v-col cols="12" md="2">
-            <v-btn
-              color="primary"
-              block
-              size="large"
-              prepend-icon="mdi-plus"
-              class="text-none mb-6 rounded-lg elevation-2"
-              @click="dialogSolicitar = true"
-            >
-              Solicitar Auditório
-            </v-btn>
-          
-          <!-- MODAL DE SOLICITAÇÃO DE AUDITÓRIO -->
-          <v-dialog v-model="dialogSolicitar" max-width="500px">
-            <v-card class="rounded-xl pa-2">
-              <v-card-title class="d-flex justify-space-between align-center pa-4">
-                <span class="text-h6 font-weight-bold">Solicitar Auditório</span>
-                <v-btn icon="mdi-close" variant="text" density="compact" @click="dialogSolicitar = false"></v-btn>
-              </v-card-title>
+   <AppHeader portal-label="Open Campus" module-label="Calendário de Eventos"/>   
+  <v-main>
+    <v-container fluid class="pa-6 bg-grey-lighten-4">
+      <v-row>
+        <v-col cols="12" md="2">
+              <v-btn
+                color="primary"
+                block
+                size="large"
+                prepend-icon="mdi-plus"
+                class="text-none mb-6 rounded-lg elevation-2"
+                @click="dialogSolicitar = true"
+              >
+                Solicitar Auditório
+              </v-btn>
+            
+            <v-dialog v-model="dialogSolicitar" max-width="500px">
+              <v-card class="rounded-xl pa-2">
+                <v-card-title class="d-flex justify-space-between align-center pa-4">
+                  <span class="text-h6 font-weight-bold">Solicitar Auditório</span>
+                  <v-btn icon="mdi-close" variant="text" density="compact" @click="dialogSolicitar = false"></v-btn>
+                </v-card-title>
 
-              <v-card-text class="pa-4">
-                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Título do Evento</label>
-                <v-text-field
-                  v-model="novoEvento.titulo"
-                  placeholder="Ex: Palestra sobre IA"
-                  variant="outlined"
-                  density="compact"
-                  class="mb-3 rounded-lg"
-                ></v-text-field>
+                <v-card-text class="pa-4">
+                  <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Título do Evento</label>
+                  <v-text-field
+                    v-model="novoEvento.titulo"
+                    placeholder="Ex: Palestra sobre IA"
+                    variant="outlined"
+                    density="compact"
+                    class="mb-3 rounded-lg"
+                  ></v-text-field>
 
-                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
-                <v-select
-                  v-model="novoEvento.categoria"
-                  :items="['Acadêmico', 'Administrativo', 'Auditórios', 'Eventos', 'Palestras']"
-                  placeholder="Selecione a categoria"
-                  variant="outlined"
-                  density="compact"
-                  class="mb-3 rounded-lg"
-                ></v-select>
+                  <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
+                  <v-select
+                    v-model="novoEvento.categoria"
+                    :items="['Acadêmico', 'Administrativo', 'Auditórios', 'Eventos', 'Palestras']"
+                    placeholder="Selecione a categoria"
+                    variant="outlined"
+                    density="compact"
+                    class="mb-3 rounded-lg"
+                  ></v-select>
 
-                <v-row density="compact">
-                  <v-col cols="6">
-                    <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Data</label>
-                    <v-text-field
-                      v-model="novoEvento.data"
-                      type="date"
-                      variant="outlined"
-                      density="compact"
-                      class="mb-3 rounded-lg"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Horário</label>
-                    <v-text-field
-                      v-model="novoEvento.horario"
-                      placeholder="14:00 - 16:00"
-                      variant="outlined"
-                      density="compact"
-                      class="mb-3 rounded-lg"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+                  <v-row density="compact">
+                    <v-col cols="6">
+                      <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Data</label>
+                      <v-text-field
+                        v-model="novoEvento.data"
+                        type="date"
+                        variant="outlined"
+                        density="compact"
+                        class="mb-3 rounded-lg"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                      <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Horário</label>
+                      <v-text-field
+                        v-model="novoEvento.horario"
+                        placeholder="14:00 - 16:00"
+                        variant="outlined"
+                        density="compact"
+                        class="mb-3 rounded-lg"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
 
-                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Local / Auditório</label>
-                <v-text-field
-                  v-model="novoEvento.local"
-                  placeholder="Ex: Auditório B, Prédio Central"
-                  variant="outlined"
-                  density="compact"
-                  class="mb-3 rounded-lg"
-                ></v-text-field>
+                  <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Local / Auditório</label>
+                  <v-text-field
+                    v-model="novoEvento.local"
+                    placeholder="Ex: Auditório B, Prédio Central"
+                    variant="outlined"
+                    density="compact"
+                    class="mb-3 rounded-lg"
+                  ></v-text-field>
 
-                <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Responsável</label>
-                <v-text-field
-                  v-model="novoEvento.responsavel"
-                  placeholder="Ex: Prof. Carlos Eduardo"
-                  variant="outlined"
-                  density="compact"
-                  class="rounded-lg"
-                ></v-text-field>
-              </v-card-text>
+                  <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Responsável</label>
+                  <v-text-field
+                    v-model="novoEvento.responsavel"
+                    placeholder="Ex: Prof. Carlos Eduardo"
+                    variant="outlined"
+                    density="compact"
+                    class="rounded-lg"
+                  ></v-text-field>
+                </v-card-text>
 
-              <v-card-actions class="pa-4 pt-0 d-flex justify-end gap-2">
-                <v-btn variant="text" class="text-none" @click="dialogSolicitar = false">Cancelar</v-btn>
-                <v-btn
-                  color="primary"
-                  variant="flat"
-                  class="text-none font-weight-bold rounded-lg px-6"
-                  :disabled="!novoEvento.titulo || !novoEvento.data || !novoEvento.categoria"
-                  @click="agendarEvento"
-                >
-                  Agendar
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-       
-        <v-card variant="outlined" class="pa-3 mb-6 bg-white rounded-lg border">
-          <div class="d-flex align-center justify-space-between mb-1">
-            <span class="font-weight-bold text-subtitle-2">{{ currentMonthYear }}</span>
-            <div>
-              <v-btn icon="mdi-chevron-left" variant="text" density="compact" @click="prevMonth"></v-btn>
-              <v-btn icon="mdi-chevron-right" variant="text" density="compact" @click="nextMonth"></v-btn>
-            </div>
-          </div>
-          <span class="text-caption text-grey-darken-1">8 eventos agendados este mês.</span>
-        </v-card>
-
-      
-        <div class="text-caption font-weight-bold text-grey-darken-1 mb-2">CATEGORIAS</div>
-        <v-checkbox v-model="categories.academico" label="Acadêmico" color="blue" hide-details density="compact"></v-checkbox>
-        <v-checkbox v-model="categories.administrativo" label="Administrativo" color="orange" hide-details density="compact"></v-checkbox>
-        <v-checkbox v-model="categories.auditorios" label="Auditórios" color="teal" hide-details density="compact"></v-checkbox>
-        <v-checkbox v-model="categories.eventos" label="Eventos" color="grey" hide-details density="compact"></v-checkbox>
-        <v-checkbox v-model="categories.palestras" label="Palestras" color="purple" hide-details density="compact"></v-checkbox>
-      </v-col>
-
-      
-      <v-col cols="12" md="7">
-        <v-card class="pa-4 rounded-lg elevation-1 bg-white">
-          <!-- Cabeçalho do Calendário -->
-          <div class="d-flex align-center justify-space-between mb-4">
-            <div class="d-flex align-center gap-2">
-              <h2 class="text-h5 font-weight-bold mr-2">{{ currentMonthYear }}</h2>
-              <v-btn size="small" variant="outlined" color="primary" @click="goToToday">Hoje</v-btn>
-              <div class="ml-2">
+                <v-card-actions class="pa-4 pt-0 d-flex justify-end gap-2">
+                  <v-btn variant="text" class="text-none" @click="dialogSolicitar = false">Cancelar</v-btn>
+                  <v-btn
+                    color="primary"
+                    variant="flat"
+                    class="text-none font-weight-bold rounded-lg px-6"
+                    :disabled="!novoEvento.titulo || !novoEvento.data || !novoEvento.categoria"
+                    @click="agendarEvento"
+                  >
+                    Agendar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+        
+          <v-card variant="outlined" class="pa-3 mb-6 bg-white rounded-lg border">
+            <div class="d-flex align-center justify-space-between mb-1">
+              <span class="font-weight-bold text-subtitle-2">{{ currentMonthYear }}</span>
+              <div>
                 <v-btn icon="mdi-chevron-left" variant="text" density="compact" @click="prevMonth"></v-btn>
                 <v-btn icon="mdi-chevron-right" variant="text" density="compact" @click="nextMonth"></v-btn>
               </div>
             </div>
-            
-            <v-btn-toggle v-model="viewType" mandatory color="primary" density="compact">
-              <v-btn value="mes">Mês</v-btn>
-              <v-btn value="semana">Semana</v-btn>
-              <v-btn value="dia">Dia</v-btn>
-            </v-btn-toggle>
-          </div>
+            <span class="text-caption text-grey-darken-1">8 eventos agendados este mês.</span>
+          </v-card>
 
-         
-          <v-sheet border class="rounded-lg">
-            <div class="calendar-grid">
-              <!-- Dias da Semana -->
-              <div v-for="day in weekDays" :key="day" class="weekday-header">
-                {{ day }}
-              </div>
+        
+          <div class="text-caption font-weight-bold text-grey-darken-1 mb-2">CATEGORIAS</div>
+          <v-checkbox v-model="categories.academico" label="Acadêmico" color="blue" hide-details density="compact"></v-checkbox>
+          <v-checkbox v-model="categories.administrativo" label="Administrativo" color="orange" hide-details density="compact"></v-checkbox>
+          <v-checkbox v-model="categories.auditorios" label="Auditórios" color="teal" hide-details density="compact"></v-checkbox>
+          <v-checkbox v-model="categories.eventos" label="Eventos" color="grey" hide-details density="compact"></v-checkbox>
+          <v-checkbox v-model="categories.palestras" label="Palestras" color="purple" hide-details density="compact"></v-checkbox>
+        </v-col>
 
-              
-              <div
-                v-for="(day, index) in calendarDays"
-                :key="index"
-                :class="[
-                  'calendar-day',
-                  { 'other-month': !day.isCurrentMonth },
-                  { 'today': day.isToday },
-                  { 'selected': day.isSelected }
-                ]"
-                @click="selectDate(day)"
-              >
-                <span class="day-number">{{ day.dateNumber }}</span>
-                
-               
-                <div v-if="day.events && day.events.length" class="event-list">
-                  <span
-                    v-for="event in day.events"
-                    :key="event.id"
-                    class="event-badge"
-                    :style="{ backgroundColor: event.color || '#1867C0' }"
-                  >
-                    {{ event.title }}
-                  </span>
+        
+        <v-col cols="12" md="7">
+          <v-card class="pa-4 rounded-lg elevation-1 bg-white">
+            <div class="d-flex align-center justify-space-between mb-4">
+              <div class="d-flex align-center gap-2">
+                <h2 class="text-h5 font-weight-bold mr-2">{{ currentMonthYear }}</h2>
+                <v-btn size="small" variant="outlined" color="primary" @click="goToToday">Hoje</v-btn>
+                <div class="ml-2">
+                  <v-btn icon="mdi-chevron-left" variant="text" density="compact" @click="prevMonth"></v-btn>
+                  <v-btn icon="mdi-chevron-right" variant="text" density="compact" @click="nextMonth"></v-btn>
                 </div>
               </div>
+              
+              <v-btn-toggle v-model="viewType" mandatory color="primary" density="compact">
+                <v-btn value="mes">Mês</v-btn>
+                <v-btn value="semana">Semana</v-btn>
+                <v-btn value="dia">Dia</v-btn>
+              </v-btn-toggle>
             </div>
-          </v-sheet>
-        </v-card>
-      </v-col>
 
-      
-      <v-col cols="12" md="3">
-        <div class="d-flex align-center justify-space-between mb-4">
-          <span class="font-weight-bold text-subtitle-1">Próximos Eventos</span>
-          <v-btn variant="text" color="primary" density="compact" class="text-none">Ver todos</v-btn>
-        </div>
+          
+            <v-sheet border class="rounded-lg">
+              <div class="calendar-grid">
+                <!-- Dias da Semana -->
+                <div v-for="day in weekDays" :key="day" class="weekday-header">
+                  {{ day }}
+                </div>
 
-        <!-- Lista de Eventos Dinâmica -->
-        <v-card 
-          v-for="evt in listaEventos" 
-          :key="evt.id" 
-          class="mb-3 pa-3 rounded-lg border elevation-0 bg-white"
-        >
-          <v-chip :color="obterCorCategoria(evt.categoria)" size="x-small" label class="mb-2 font-weight-bold">
-            {{ evt.categoria.toUpperCase() }}
-          </v-chip>
-          <div class="font-weight-bold text-subtitle-2 mb-1">{{ evt.titulo }}</div>
-          <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
-            <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> {{ evt.dataFormatted }}, {{ evt.horario }}
-          </div>
-          <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
-            <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> {{ evt.local }}
-          </div>
-          <div v-if="evt.responsavel" class="text-caption text-grey-darken-1 d-flex align-center">
-            <v-icon size="14" class="mr-1">mdi-account-outline</v-icon> {{ evt.responsavel }}
-          </div>
-        </v-card>
-      </v-col>
+                
+                <div
+                  v-for="(day, index) in calendarDays"
+                  :key="index"
+                  :class="[
+                    'calendar-day',
+                    { 'other-month': !day.isCurrentMonth },
+                    { 'today': day.isToday },
+                    { 'selected': day.isSelected }
+                  ]"
+                  @click="selectDate(day)"
+                >
+                  <span class="day-number">{{ day.dateNumber }}</span>
+                  
+                
+                  <div v-if="day.events && day.events.length" class="event-list">
+                    <span
+                      v-for="event in day.events"
+                      :key="event.id"
+                      class="event-badge"
+                      :style="{ backgroundColor: event.color || '#1867C0' }"
+                    >
+                      {{ event.title }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </v-sheet>
+          </v-card>
+        </v-col>
 
-    </v-row>
-  </v-container>
+        
+        <v-col cols="12" md="3">
+          <div class="d-flex align-center justify-space-between mb-4">
+            <span class="font-weight-bold text-subtitle-1">Próximos Eventos</span>
+            <v-btn variant="text" color="primary" density="compact" class="text-none">Ver todos</v-btn>
+          </div>
+
+          <v-card 
+            v-for="evt in listaEventos" 
+            :key="evt.id" 
+            class="mb-3 pa-3 rounded-lg border elevation-0 bg-white"
+          >
+            <v-chip :color="obterCorCategoria(evt.categoria)" size="x-small" label class="mb-2 font-weight-bold">
+              {{ evt.categoria.toUpperCase() }}
+            </v-chip>
+            <div class="font-weight-bold text-subtitle-2 mb-1">{{ evt.titulo }}</div>
+            <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
+              <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon> {{ evt.dataFormatted }}, {{ evt.horario }}
+            </div>
+            <div class="text-caption text-grey-darken-1 d-flex align-center mb-1">
+              <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon> {{ evt.local }}
+            </div>
+            <div v-if="evt.responsavel" class="text-caption text-grey-darken-1 d-flex align-center">
+              <v-icon size="14" class="mr-1">mdi-account-outline</v-icon> {{ evt.responsavel }}
+            </div>
+          </v-card>
+        </v-col>
+
+      </v-row>
+    </v-container>
+  </v-main>
+  
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import AppHeader from '@/components/common/AppHeader.vue'
 
 interface CalendarEvent {
   id: number
@@ -266,7 +266,6 @@ const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const currentDate = ref(new Date())
 const selectedDate = ref<Date | null>(new Date())
 
-// Eventos iniciais de exemplo
 const listaEventos = ref<EventoCompleto[]>([
   {
     id: 1,
