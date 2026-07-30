@@ -1,0 +1,19 @@
+$navy-brand: #0f2a4a;
+$border-color: #e2e8f0;
+
+.border-sm {
+  border: 1px solid $border-color !important;
+}
+
+.border-blue {
+  border: 1px solid #bfdbfe !important;
+}
+
+.line-height-tight {
+  line-height: 1.3;
+}
+
+.v-list-item--active {
+  background-color: #e0e7ff !important;
+  font-weight: 700 !important;
+}

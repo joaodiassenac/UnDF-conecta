@@ -1,0 +1,73 @@
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: #e2e8f0;
+}
+
+.weekday-header {
+  background-color: #f8fafc;
+  padding: 0.75rem 0.25rem;
+  text-align: center;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.calendar-day {
+  background-color: #ffffff;
+  min-height: 80px;
+  padding: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: #f1f5f9;
+  }
+
+  &.other-month {
+    background-color: #f8fafc;
+    color: #cbd5e1;
+  }
+
+  &.today .day-number {
+    background-color: #42b883;
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.selected {
+    outline: 2px solid #42b883;
+    outline-offset: -2px;
+  }
+}
+
+.day-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event-badge {
+  font-size: 0.65rem;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
