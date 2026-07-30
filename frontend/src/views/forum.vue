@@ -215,7 +215,6 @@
                 </v-btn>
               </div>
 
-              <!-- Caixinha de Comentários (Aparece ao clicar no botão acima) -->
               <v-expand-transition>
                 <div v-if="post.mostrarComentarios" class="mt-4 pt-4 border-t-sm">
                   <!-- Lista de comentários já feitos -->
