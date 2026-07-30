@@ -14,7 +14,62 @@
             </v-sheet>
       </div>
     </v-app-bar>
+    <v-dialog v-model="dialogNovaPublicacao" max-width="600px">
+  <v-card class="rounded-xl pa-2">
+    <v-card-title class="d-flex justify-space-between align-center pa-4">
+      <span class="text-h6 font-weight-bold text-blue-grey-darken-4">Criar nova publicação</span>
+      <v-btn icon="mdi-close" variant="text" density="compact" @click="dialogNovaPublicacao = false"></v-btn>
+    </v-card-title>
 
+    <v-card-text class="pa-4">
+      <!-- Título -->
+      <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Título da Publicação</label>
+      <v-text-field
+        v-model="novaPublicacao.titulo"
+        placeholder="Ex: Ar condicionado do auditório com defeito"
+        variant="outlined"
+        density="compact"
+        class="mb-3 rounded-lg"
+      ></v-text-field>
+
+      <!-- Categoria -->
+      <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
+      <v-select
+        v-model="novaPublicacao.categoria"
+        :items="['Infraestrutura', 'Ensino', 'RU', 'Tecnologia', 'Eventos']"
+        placeholder="Selecione uma categoria"
+        variant="outlined"
+        density="compact"
+        class="mb-3 rounded-lg"
+      ></v-select>
+
+      <!-- Conteúdo/Texto -->
+      <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Conteúdo</label>
+      <v-textarea
+        v-model="novaPublicacao.conteudo"
+        placeholder="Descreva detalhadamente a sua publicação ou problema..."
+        variant="outlined"
+        rows="4"
+        class="rounded-lg"
+      ></v-textarea>
+    </v-card-text>
+
+    <v-card-actions class="pa-4 pt-0 d-flex justify-end gap-2">
+      <v-btn variant="text" class="text-none" @click="dialogNovaPublicacao = false">
+        Cancelar
+      </v-btn>
+      <v-btn
+        color="#0F2A4A"
+        variant="flat"
+        class="text-none font-weight-bold rounded-lg px-6"
+        :disabled="!novaPublicacao.titulo || !novaPublicacao.conteudo || !novaPublicacao.categoria"
+        @click="publicarPost"
+      >
+        Publicar
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
     <v-main class="w-100">
       <!-- TABS DE NAVEGAÇÃO PRINCIPAL -->
        <!--
@@ -158,6 +213,11 @@ import { ref, computed } from 'vue'
 const searchQuery = ref('')
 const categoriaSelecionada = ref('Todas')
 const dialogNovaPublicacao = ref(false)
+const novaPublicacao = ref({
+  titulo: '',
+  categoria: null,
+  conteudo: ''
+})
 
 const categorias = ref(['Todas', 'Infraestrutura', 'Ensino', 'RU', 'Tecnologia', 'Eventos'])
 
@@ -209,6 +269,27 @@ const publicacoesFiltradas = computed(() => {
 function votar(postId: number) {
   const post = publicacoes.value.find(p => p.id === postId)
   if (post) post.votos++
+}
+
+function publicarPost() {
+  if (!novaPublicacao.value.titulo || !novaPublicacao.value.conteudo || !novaPublicacao.value.categoria) return
+
+  // Adiciona no topo do array local (simulando a resposta do banco)
+  publicacoes.value.unshift({
+    id: Date.now(),
+    autor: 'Ana Silva Santos',
+    dataCriacao: 'agora mesmo',
+    titulo: novaPublicacao.value.titulo,
+    conteudo: novaPublicacao.value.conteudo,
+    categoria: novaPublicacao.value.categoria,
+    status: 'EM ANÁLISE',
+    votos: 0,
+    comentariosCount: 0
+  })
+
+  // Limpa o formulário e fecha o modal
+  novaPublicacao.value = { titulo: '', categoria: null, conteudo: '' }
+  dialogNovaPublicacao.value = false
 }
 </script>
 
