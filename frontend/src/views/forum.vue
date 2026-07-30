@@ -22,7 +22,6 @@
     </v-card-title>
 
     <v-card-text class="pa-4">
-      <!-- Título -->
       <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Título da Publicação</label>
       <v-text-field
         v-model="novaPublicacao.titulo"
@@ -43,7 +42,6 @@
         class="mb-3 rounded-lg"
       ></v-select>
 
-      <!-- Conteúdo/Texto -->
       <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Conteúdo</label>
       <v-textarea
         v-model="novaPublicacao.conteudo"
@@ -132,9 +130,25 @@
           <span class="font-weight-bold text-subtitle-1 text-grey-darken-3">
             Discussões Recentes ({{ publicacoesFiltradas.length }})
           </span>
-          <span class="text-caption text-grey-darken-2 font-weight-medium">
-            Ordenar por: <strong class="text-blue-grey-darken-4">Mais Recentes</strong>
-          </span>
+          <div class="d-flex align-center">
+            <span class="text-caption text-grey-darken-1 mr-1">Ordenar por:</span>
+            <v-select
+              v-model="ordenacaoSelecionada"
+              :items="[
+                { title: 'Mais Recentes', value: 'recents' },
+                { title: 'Mais Relevantes (Votos)', value: 'votes' },
+                { title: 'Mais Comentados', value: 'comments' }
+              ]"
+              item-title="title"
+              item-value="value"
+              variant="plain"
+              density="compact"
+              hide-details
+              single-line
+              class="font-weight-bold text-caption pa-0 ma-0"
+              style="width: auto; min-width: 150px;"
+            ></v-select>
+          </div>
         </div>
 
         <v-card
@@ -212,6 +226,7 @@ import { ref, computed } from 'vue'
 
 const searchQuery = ref('')
 const categoriaSelecionada = ref('Todas')
+const ordenacaoSelecionada = ref('recents')
 const dialogNovaPublicacao = ref(false)
 const novaPublicacao = ref({
   titulo: '',
@@ -258,12 +273,22 @@ const publicacoes = ref([
 ])
 
 const publicacoesFiltradas = computed(() => {
-  return publicacoes.value.filter(post => {
-    const bateCategoria = categoriaSelecionada.value === 'Todas' || post.categoria === categoriaSelecionada.value
-    const bateBusca = post.titulo.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                      post.conteudo.toLowerCase().includes(searchQuery.value.toLowerCase())
-    return bateCategoria && bateBusca
+  let lista = publicacoes.value.filter(post => {
+    const atendeCategoria = categoriaSelecionada.value === 'Todas' || post.categoria === categoriaSelecionada.value
+    const atendeBusca = post.titulo.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                        post.conteudo.toLowerCase().includes(searchQuery.value.toLowerCase())
+    return atendeCategoria && atendeBusca
   })
+
+  if (ordenacaoSelecionada.value === 'votes') {
+    return lista.sort((a, b) => (b.votos || 0) - (a.votos || 0))
+  }
+  
+  if (ordenacaoSelecionada.value === 'comments') {
+    return lista.sort((a, b) => (b.comentariosCount || 0) - (a.comentariosCount || 0))
+  }
+
+  return lista.sort((a, b) => b.id - a.id)
 })
 
 function votar(postId: number) {
@@ -274,7 +299,7 @@ function votar(postId: number) {
 function publicarPost() {
   if (!novaPublicacao.value.titulo || !novaPublicacao.value.conteudo || !novaPublicacao.value.categoria) return
 
-  // Adiciona no topo do array local (simulando a resposta do banco)
+
   publicacoes.value.unshift({
     id: Date.now(),
     autor: 'Ana Silva Santos',

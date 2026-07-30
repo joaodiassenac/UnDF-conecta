@@ -76,3 +76,16 @@ $text-muted: #64748b;
     gap: 0.5rem;
   }
 }
+.inline-select {
+  .v-field__input {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: unset !important;
+    font-weight: 700 !important;
+  }
+
+  .v-field__append-inner {
+    padding-top: 0 !important;
+    align-items: center !important;
+  }
+}
