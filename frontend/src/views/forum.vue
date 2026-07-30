@@ -31,7 +31,6 @@
         class="mb-3 rounded-lg"
       ></v-text-field>
 
-      <!-- Categoria -->
       <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
       <v-select
         v-model="novaPublicacao.categoria"
@@ -193,25 +192,75 @@
                   </v-chip>
                 </div>
 
-                <div class="d-flex align-center gap-4">
-                  <v-btn
-                    variant="text"
-                    density="compact"
-                    prepend-icon="mdi-heart-outline"
-                    class="text-caption text-grey-darken-1"
-                    @click="votar(post.id)"
-                  >
-                    {{ post.votos }}
-                  </v-btn>
-                  <v-btn
-                    variant="text"
-                    density="compact"
-                    prepend-icon="mdi-comment-outline"
-                    class="text-caption text-grey-darken-1"
-                  >
-                    {{ post.comentariosCount }}
-                  </v-btn>
+              <div class="d-flex align-center gap-4">
+                <v-btn
+                  variant="text"
+                  density="compact"
+                  prepend-icon="mdi-heart-outline"
+                  class="text-caption text-grey-darken-1"
+                  @click="votar(post.id)"
+                >
+                  {{ post.votos }}
+                </v-btn>
+
+                <!-- Botão de Comentário atualizado com o @click para abrir/fechar -->
+                <v-btn
+                  variant="text"
+                  density="compact"
+                  prepend-icon="mdi-comment-outline"
+                  class="text-caption text-grey-darken-1"
+                  @click="post.mostrarComentarios = !post.mostrarComentarios"
+                >
+                  {{ post.comentariosCount }}
+                </v-btn>
+              </div>
+
+              <!-- Caixinha de Comentários (Aparece ao clicar no botão acima) -->
+              <v-expand-transition>
+                <div v-if="post.mostrarComentarios" class="mt-4 pt-4 border-t-sm">
+                  <!-- Lista de comentários já feitos -->
+                  <div v-if="post.comentarios && post.comentarios.length > 0" class="mb-3 space-y-2">
+                    <div 
+                      v-for="comentario in post.comentarios" 
+                      :key="comentario.id" 
+                      class="bg-grey-lighten-4 pa-3 rounded-lg mb-2"
+                    >
+                      <div class="d-flex justify-space-between align-center mb-1">
+                        <span class="text-caption font-weight-bold text-blue-grey-darken-4">{{ comentario.autor }}</span>
+                        <span class="text-caption text-grey">{{ comentario.data }}</span>
+                      </div>
+                      <p class="text-body-2 text-grey-darken-3 ma-0">{{ comentario.texto }}</p>
+                    </div>
+                  </div>
+                  <div v-else class="text-caption text-grey text-center my-2">
+                    Nenhum comentário ainda. Seja o primeiro a comentar!
+                  </div>
+
+                  <!-- Input para escrever novo comentário -->
+                  <div class="d-flex align-center gap-2 mt-3">
+                    <v-text-field
+                      v-model="post.novoComentario"
+                      placeholder="Escreva um comentário..."
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                      class="bg-grey-lighten-5 rounded-lg flex-grow-1"
+                      @keyup.enter="adicionarComentario(post)"
+                    ></v-text-field>
+
+                    <v-btn
+                      color="#0F2A4A"
+                      variant="flat"
+                      size="small"
+                      class="text-none font-weight-bold rounded-lg px-4"
+                      :disabled="!post.novoComentario || !post.novoComentario.trim()"
+                      @click="adicionarComentario(post)"
+                    >
+                      Enviar
+                    </v-btn>
+                  </div>
                 </div>
+              </v-expand-transition>
               </div>
             </div>
           </div>
@@ -312,9 +361,29 @@ function publicarPost() {
     comentariosCount: 0
   })
 
-  // Limpa o formulário e fecha o modal
   novaPublicacao.value = { titulo: '', categoria: null, conteudo: '' }
   dialogNovaPublicacao.value = false
+}
+
+function adicionarComentario(post: any) {
+  if (!post.novoComentario || !post.novoComentario.trim()) return
+
+  // Garante que a lista de comentários existe
+  if (!post.comentarios) {
+    post.comentarios = []
+  }
+
+  // Adiciona o comentário enviado
+  post.comentarios.push({
+    id: Date.now(),
+    autor: 'Ana Silva Santos',
+    data: 'agora mesmo',
+    texto: post.novoComentario.trim()
+  })
+
+  // Aumenta o contador e limpa o input
+  post.comentariosCount++
+  post.novoComentario = ''
 }
 </script>
 
