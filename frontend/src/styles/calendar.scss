@@ -71,3 +71,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.calendar-grid.view-semana {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-grid.view-dia {
+  grid-template-columns: 1fr;
+}

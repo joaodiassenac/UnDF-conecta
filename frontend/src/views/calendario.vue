@@ -141,9 +141,8 @@
 
           
             <v-sheet border class="rounded-lg">
-              <div class="calendar-grid">
-                <!-- Dias da Semana -->
-                <div v-for="day in weekDays" :key="day" class="weekday-header">
+              <div :class="['calendar-grid', `view-${viewType}`]">
+                <div  v-for="day in (viewType === 'dia' ? [weekDays[(selectedDate || currentDate).getDay()]] : weekDays)" :key="day" class="weekday-header">
                   {{ day }}
                 </div>
 
@@ -317,17 +316,40 @@ function obterCorCategoria(cat: string) {
   return cores[cat] || 'primary'
 }
 
+// Computa os dias a serem exibidos de acordo com a visualização (mês, semana ou dia)
 const calendarDays = computed(() => {
   const days: CalendarDay[] = []
   const year = currentDate.value.getFullYear()
   const month = currentDate.value.getMonth()
+  const today = new Date()
 
+  // 1. VISUALIZAÇÃO DE DIA
+  if (viewType.value === 'dia') {
+    const targetDate = selectedDate.value || currentDate.value
+    days.push(createDayObject(targetDate, true, today))
+    return days
+  }
+
+  // 2. VISUALIZAÇÃO DE SEMANA
+  if (viewType.value === 'semana') {
+    const baseDate = selectedDate.value || currentDate.value
+    const dayOfWeek = baseDate.getDay() // 0 (Dom) a 6 (Sáb)
+    
+    // Pega do Domingo até o Sábado da semana atual
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(baseDate)
+      d.setDate(baseDate.getDate() - dayOfWeek + i)
+      const isCurrentMonth = d.getMonth() === month
+      days.push(createDayObject(d, isCurrentMonth, today))
+    }
+    return days
+  }
+
+  // 3. VISUALIZAÇÃO DE MÊS (Código original do mês)
   const firstDayOfMonth = new Date(year, month, 1)
   const lastDayOfMonth = new Date(year, month + 1, 0)
-
   const startDayOfWeek = firstDayOfMonth.getDay()
   const totalDays = lastDayOfMonth.getDate()
-  const today = new Date()
 
   const prevMonthLastDay = new Date(year, month, 0).getDate()
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
