@@ -186,7 +186,7 @@
           </div>
 
           <v-card 
-            v-for="evt in listaEventos" 
+            v-for="evt in eventosFiltrados" 
             :key="evt.id" 
             class="mb-3 pa-3 rounded-lg border elevation-0 bg-white"
           >
@@ -288,6 +288,17 @@ const listaEventos = ref<EventoCompleto[]>([
   }
 ])
 
+const eventosFiltrados = computed(() => {
+  return listaEventos.value.filter(evt => {
+    if (evt.categoria === 'Acadêmico') return categories.value.academico
+    if (evt.categoria === 'Administrativo') return categories.value.administrativo
+    if (evt.categoria === 'Auditórios') return categories.value.auditorios
+    if (evt.categoria === 'Eventos') return categories.value.eventos
+    if (evt.categoria === 'Palestras') return categories.value.palestras
+    return true
+  })
+})
+
 const currentMonthYear = computed(() => {
   return currentDate.value.toLocaleDateString('pt-BR', {
     month: 'long',
@@ -345,7 +356,7 @@ function createDayObject(date: Date, isCurrentMonth: boolean, today: Date): Cale
     d1.getFullYear() === d2.getFullYear()
 
   // Conecta os eventos da lista com as células do calendário
-  const eventosDoDia = listaEventos.value
+  const eventosDoDia = eventosFiltrados.value
     .filter(e => {
       const parts = e.data.split('-')
       if (parts.length !== 3) return false
