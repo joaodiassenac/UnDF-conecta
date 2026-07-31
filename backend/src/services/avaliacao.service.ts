@@ -19,26 +19,6 @@ interface CriarAvaliacaoInput {
 
 export class AvaliacaoService {
 
-  async listar(params: ListarParams) {
-    const { page, limit, questionarioId, sort, order } = params;
-
-    const where = {
-      ...(questionarioId ? { questionarioId } : {}),
-    };
-
-    const [data, total] = await Promise.all([
-      prisma.avaliacao.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: sort ? { [sort]: order ?? "asc" } : { enviadaEm: "desc" },
-      }),
-      prisma.avaliacao.count({ where }),
-    ]);
-
-    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
-  }
-
   async buscar(id: number) {
     return prisma.avaliacao.findUniqueOrThrow({
       where: { id },
