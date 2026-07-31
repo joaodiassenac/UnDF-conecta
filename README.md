@@ -203,6 +203,7 @@ npx prisma db seed     # opcional: popula o banco com dados de exemplo
 ```bash
 cd frontend
 npm install
+npm install vite
 ```
 
 ### 4. Rodando os dois juntos
