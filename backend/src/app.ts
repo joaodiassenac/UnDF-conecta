@@ -2,14 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import { errorHandler } from './middlewares/errorHandler';
 import { notFoundHandler } from './middlewares/notFoundHandler';
-const cors = require('cors');
+
 import routes from './routes';
 
 
 const app = express();
-const cors = require('cors');
 app.use(cors({
-  origin: 'https://seu-front.vercel.app'
+  origin: 'https://https://un-df-conecta.vercel.app'
 }));
 
 app.use(cors());
