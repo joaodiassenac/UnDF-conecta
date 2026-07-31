@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "prisma generate",
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+     "postinstall": "prisma generate",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
+    "seed": "ts-node -P prisma/tsconfig.json prisma/seed.ts"
   },
   "prisma": {
     "seed": "ts-node -P prisma/tsconfig.json prisma/seed.ts"
