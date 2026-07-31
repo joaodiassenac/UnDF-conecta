@@ -22,7 +22,7 @@
         <label class="text-caption font-weight-bold text-grey-darken-2 mb-1 d-block">Categoria</label>
         <v-select
           v-model="novaPublicacao.categoria"
-          :items="['Infraestrutura', 'Ensino', 'RU', 'Tecnologia', 'Eventos']"
+          :items="categoriasForum" item-title="nome" item-value="id"
           placeholder="Selecione uma categoria"
           variant="outlined"
           density="compact"
@@ -145,13 +145,13 @@
             <div class="d-flex">
               <v-avatar color="blue-grey-lighten-4" size="44" class="mr-4">
                 <span class="text-h6 font-weight-bold text-blue-grey-darken-3">
-                  {{ post.autor.charAt(0) }}
+                  {{ post.autorNome.charAt(0)}}
                 </span>
               </v-avatar>
 
               <div class="flex-grow-1">
                 <div class="text-caption text-grey-darken-1 mb-1">
-                  <strong class="text-blue-grey-darken-4">{{ post.autor }}</strong> • {{ post.dataCriacao }}
+                  <strong class="text-blue-grey-darken-4">{{ post.autorNome }}</strong>
                 </div>
 
                 <h3 class="text-h6 font-weight-bold text-blue-grey-darken-4 mb-2">
@@ -165,14 +165,14 @@
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex gap-2">
                     <v-chip size="small" variant="flat" color="grey-lighten-3" class="text-caption font-weight-bold text-grey-darken-2">
-                      {{ post.categoria }}
+                      {{ post.categoria?.nome}}
                     </v-chip>
                     <v-chip
                       v-if="post.status"
                       size="small"
                       variant="flat"
-                      :color="post.status === 'EM ANÁLISE' ? 'amber-lighten-4' : 'blue-lighten-4'"
-                      :class="post.status === 'EM ANÁLISE' ? 'text-amber-darken-4' : 'text-blue-darken-4'"
+                      :color="post.status === 'EM_ANALISE' ? 'amber-lighten-4' : 'blue-lighten-4'"
+                      :class="post.status === 'EM_ANALISE' ? 'text-amber-darken-4' : 'text-blue-darken-4'"
                       class="text-caption font-weight-bold"
                     >
                       {{ post.status }}
@@ -186,9 +186,9 @@
                     :prepend-icon="post.curtido ? 'mdi-heart' : 'mdi-heart-outline'"
                     :color="post.curtido ? 'red' : 'grey-darken-1'"
                     class="text-caption font-weight-bold"
-                    @click="votar(post.id)"
+                    @click="votar(post)"
                   >
-                    {{ post.votos }}
+                    {{ post._count?.votos ?? 0}}
                   </v-btn>
 
                   <v-btn
@@ -196,9 +196,9 @@
                     density="compact"
                     prepend-icon="mdi-comment-outline"
                     class="text-caption text-grey-darken-1"
-                    @click="post.mostrarComentarios = !post.mostrarComentarios"
+                    @click="toggleComentarios(post)"
                   >
-                    {{ post.comentariosCount }}
+                    {{ post._count?.comentarios ?? 0 }}
                   </v-btn>
                 </div>
 
@@ -212,10 +212,10 @@
                         class="bg-grey-lighten-4 pa-3 rounded-lg mb-2"
                       >
                         <div class="d-flex justify-space-between align-center mb-1">
-                          <span class="text-caption font-weight-bold text-blue-grey-darken-4">{{ comentario.autor }}</span>
-                          <span class="text-caption text-grey">{{ comentario.data }}</span>
+                          <span class="text-caption font-weight-bold text-blue-grey-darken-4">{{ comentario.autorNome }}</span>
+                          <span class="text-caption text-grey">{{ comentario.criadoEm }}</span>
                         </div>
-                        <p class="text-body-2 text-grey-darken-3 ma-0">{{ comentario.texto }}</p>
+                        <p class="text-body-2 text-grey-darken-3 ma-0">{{ comentario.conteudo }}</p>
                       </div>
                     </div>
                     <div v-else class="text-caption text-grey text-center my-2">
@@ -257,31 +257,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import AppHeader from '@/components/common/AppHeader.vue'
+import { ref, computed, onMounted } from 'vue'
+import {
+  listarPosts, criarPost, listarCategoriasForum,
+  curtirPost, removerCurtida, verificarCurtida,
+  criarComentario, listarComentariosDoPost,
+  type ForumPost, type ForumCategoria, type ForumComment,
+} from '@/services/forum'
 
-interface Comentario {
-  id: number
-  autor: string
-  data: string
-  texto: string
-}
-
-interface Post {
-  id: number
-  autor: string
-  dataCriacao: string
-  titulo: string
-  conteudo: string
-  categoria: string
-  status?: string
-  votos: number
-  comentariosCount: number
+type PostUI = ForumPost & {
   curtido?: boolean
   mostrarComentarios?: boolean
   novoComentario?: string
-  comentarios?: Comentario[]
+  comentarios?: ForumComment[]
 }
+
 
 const searchQuery = ref('')
 const categoriaSelecionada = ref('Todas')
@@ -293,112 +284,120 @@ const novaPublicacao = ref({
   conteudo: ''
 })
 
-const categorias = ref(['Todas', 'Infraestrutura', 'Ensino', 'RU', 'Tecnologia', 'Eventos'])
+const categorias = computed(() => ['Todas', ...categoriasForum.value.map(c => c.nome)])
 
-const publicacoes = ref<Post[]>([
-  {
-    id: 1,
-    autor: 'Camila R.',
-    dataCriacao: 'há 2h',
-    titulo: 'WiFi instável no bloco C há uma semana',
-    conteudo: 'Sinal cai constantemente durante as aulas práticas no segundo andar do bloco. Inviabiliza o uso de ferramentas de programação.',
-    categoria: 'Infraestrutura',
-    status: 'EM ANÁLISE',
-    votos: 18,
-    comentariosCount: 6
-  },
-  {
-    id: 2,
-    autor: 'Grêmio Acadêmico',
-    dataCriacao: 'há 1 dia',
-    titulo: 'Proposta: ampliar horário da biblioteca em período de provas',
-    conteudo: 'Solicitamos a abertura até as 22h nas duas semanas que antecedem as avaliações finais para melhor acolhimento dos estudantes.',
-    categoria: 'Ensino',
-    status: 'PLANEJADA',
-    votos: 42,
-    comentariosCount: 15
-  },
-  {
-    id: 3,
-    autor: 'Mateus Santana',
-    dataCriacao: 'há 2 dias',
-    titulo: 'Ar condicionado do auditório principal com defeito',
-    conteudo: 'Equipamento está desligando sozinho no meio das palestras, deixando o ambiente abafado e desconfortável para eventos longos.',
-    categoria: 'Infraestrutura',
-    status: 'EM ANÁLISE',
-    votos: 28,
-    comentariosCount: 4
+const categoriasForum = ref<ForumCategoria[]>([])
+const publicacoes = ref<PostUI[]>([])
+const carregando = ref(false)
+const erro = ref<string | null>(null)
+
+onMounted(async () => {
+  carregando.value = true
+  erro.value = null
+  try {
+    const [resCategorias, resPosts] = await Promise.all([
+      listarCategoriasForum({ limit: 100 }),
+      listarPosts({ limit: 100 }),
+    ])
+    categoriasForum.value = resCategorias.data.data
+    publicacoes.value = resPosts.data.data
+
+    for (const post of publicacoes.value) {
+  const { data } = await verificarCurtida(
+    post.id,
+    'mock-user-1'
+  )
+
+  post.curtido = data.curtido
+}
+  } catch (e) {
+    erro.value = 'Não foi possível carregar o fórum.'
+    console.error(e)
+  } finally {
+    carregando.value = false
   }
-])
+})
 
 const publicacoesFiltradas = computed(() => {
   let lista = publicacoes.value.filter(post => {
-    const atendeCategoria = categoriaSelecionada.value === 'Todas' || post.categoria === categoriaSelecionada.value
+    const atendeCategoria = categoriaSelecionada.value === 'Todas' || post.categoria?.nome === categoriaSelecionada.value
     const atendeBusca = post.titulo.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                         post.conteudo.toLowerCase().includes(searchQuery.value.toLowerCase())
     return atendeCategoria && atendeBusca
   })
 
   if (ordenacaoSelecionada.value === 'votes') {
-    return lista.sort((a, b) => (b.votos || 0) - (a.votos || 0))
-  }
-  
-  if (ordenacaoSelecionada.value === 'comments') {
-    return lista.sort((a, b) => (b.comentariosCount || 0) - (a.comentariosCount || 0))
-  }
+  return lista.sort((a, b) => (b._count?.votos ?? 0) - (a._count?.votos ?? 0))
+}
+
+if (ordenacaoSelecionada.value === 'comments') {
+  return lista.sort((a, b) => (b._count?.comentarios ?? 0) - (a._count?.comentarios ?? 0))
+}
 
   return lista.sort((a, b) => b.id - a.id)
 })
 
-function votar(postId: number) {
-  const post = publicacoes.value.find(p => p.id === postId)
-  if (!post) return
+async function votar(post: PostUI) {
+  const usuarioIdentificador = 'mock-user-1'
 
-  post.curtido = !post.curtido
+  try {
+    if (post.curtido) {
+      await removerCurtida(post.id, usuarioIdentificador)
 
-  if (post.curtido) {
-    post.votos++
-  } else {
-    post.votos--
+      post.curtido = false
+
+      if (post._count) {
+        post._count.votos--
+      }
+    } else {
+      await curtirPost(post.id, usuarioIdentificador)
+
+      post.curtido = true
+
+      if (!post._count) {
+        post._count = {
+          votos: 0,
+          comentarios: 0
+        }
+      }
+
+      post._count.votos++
+    }
+  } catch (err) {
+    console.error(err)
   }
 }
 
-function publicarPost() {
+async function publicarPost() {
   if (!novaPublicacao.value.titulo || !novaPublicacao.value.conteudo || !novaPublicacao.value.categoria) return
-
-
-  publicacoes.value.unshift({
-    id: Date.now(),
-    autor: 'Ana Silva Santos',
-    dataCriacao: 'agora mesmo',
+  const { data } = await criarPost({
     titulo: novaPublicacao.value.titulo,
     conteudo: novaPublicacao.value.conteudo,
-    categoria: novaPublicacao.value.categoria,
-    status: 'EM ANÁLISE',
-    votos: 0,
-    comentariosCount: 0
+    categoriaId: novaPublicacao.value.categoria, 
+    autorNome: 'Ana Silva Santos', 
   })
-
+  publicacoes.value.unshift(data.data)
   novaPublicacao.value = { titulo: '', categoria: null, conteudo: '' }
   dialogNovaPublicacao.value = false
 }
 
-function adicionarComentario(post: any) {
-  if (!post.novoComentario || !post.novoComentario.trim()) return
-
-  if (!post.comentarios) {
-    post.comentarios = []
-  }
-
-  post.comentarios.push({
-    id: Date.now(),
-    autor: 'Ana Silva Santos',
-    data: 'agora mesmo',
-    texto: post.novoComentario.trim()
+async function adicionarComentario(post: ForumPost & { novoComentario?: string; comentarios?: ForumComment[] }) {
+  if (!post.novoComentario?.trim()) return
+  const { data } = await criarComentario({
+    postId: post.id,
+    autorNome: 'Ana Silva Santos', // TODO: usuário autenticado
+    conteudo: post.novoComentario.trim(),
   })
-
-  post.comentariosCount++
+  if (!post.comentarios) post.comentarios = []
+  post.comentarios.push(data.data)
   post.novoComentario = ''
+}
+async function toggleComentarios(post: ForumPost & { comentarios?: ForumComment[]; mostrarComentarios?: boolean }) {
+  post.mostrarComentarios = !post.mostrarComentarios
+  if (post.mostrarComentarios && !post.comentarios) {
+    const { data } = await listarComentariosDoPost(post.id)
+    post.comentarios = data
+  }
 }
 </script>
 

@@ -15,19 +15,21 @@ withDefaults(defineProps<Props>(), {
   moduleLabel: 'Calendário de Eventos',
   userName: 'Ana Silva Santos'
 })
-
 </script>
 
 <template>
   <v-app-bar app flat color="background" class="app-header px-8" height="72">
     <div class="d-flex align-center gap-2">
       <v-btn icon="mdi-menu" variant="text" color="#0F2A4A" class="mr-1" @click="toggleSidebar"></v-btn>
-      <span class="font-weight-bold text-subtitle-1 text-grey-darken-4">{{ portalLabel }}</span>
       
-      <template v-if="moduleLabel">
-        <span class="text-grey-lighten-1">|</span>
-        <span class="text-subtitle-2 text-grey-darken-1 font-weight-regular">{{ moduleLabel }}</span>
-      </template>
+      <router-link to="/" class="brand-link d-flex align-center gap-2">
+        <span class="font-weight-bold text-subtitle-1 text-grey-darken-4">{{ portalLabel }}</span>
+        
+        <template v-if="moduleLabel">
+          <span class="text-grey-lighten-1">|</span>
+          <span class="text-subtitle-2 text-grey-darken-1 font-weight-regular">{{ moduleLabel }}</span>
+        </template>
+      </router-link>
     </div>
 
     <v-spacer></v-spacer>
@@ -45,5 +47,15 @@ withDefaults(defineProps<Props>(), {
 <style scoped>
 .gap-2 {
   gap: 8px;
+}
+
+.brand-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.brand-link:hover {
+  opacity: 0.85; 
 }
 </style>
