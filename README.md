@@ -179,7 +179,7 @@ open-campus/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/vivircamara/open-campus.git
+git clone https://github.com/vivircamara/UnDF-conecta.git
 cd open-campus
 ```
 
