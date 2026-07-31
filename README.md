@@ -196,8 +196,6 @@ Configure o `.env` (veja [Variáveis de ambiente](#variáveis-de-ambiente)), dep
 npx prisma generate
 npx prisma migrate dev --name init
 npx prisma db seed     # opcional: popula o banco com dados de exemplo
-
-npm run dev             # inicia com hot reload (tsx watch)
 ```
 
 ### 3. Frontend
@@ -205,25 +203,12 @@ npm run dev             # inicia com hot reload (tsx watch)
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
 ### 4. Rodando os dois juntos
 
-Para não precisar de dois terminais manuais, crie um `package.json` na raiz do projeto usando `concurrently`:
-
-```json
-{
-  "name": "open-campus",
-  "private": true,
-  "scripts": {
-    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.0"
-  }
-}
-```
+Para não precisar de dois terminais manuais, o projeto faz uso do `concurrently`
+Execute na raiz do projeto:
 
 ```bash
 npm install
