@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import healthRoutes from "./health.routes";
 import categoriaEventoRoutes from "./categoriaEvento.routes";
 import eventoRoutes from "./evento.routes";
 import categoriaForumRoutes from "./categoriaForum.routes";
@@ -13,6 +14,8 @@ import enqueteRoutes from "./enquete.routes";
 import opcaoEnqueteRoutes from "./opcaoEnquete.routes";
 
 const router = Router();
+
+router.use("/health", healthRoutes);
 
 // Calendário
 router.use("/categorias-evento", categoriaEventoRoutes);
