@@ -179,7 +179,7 @@ open-campus/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/<org-ou-usuario>/open-campus.git
+git clone https://github.com/vivircamara/open-campus.git
 cd open-campus
 ```
 
