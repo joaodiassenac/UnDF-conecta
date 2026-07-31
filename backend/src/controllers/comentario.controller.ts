@@ -19,17 +19,17 @@ export class ComentarioController {
         page,
         limit,
         postId,
-        autorId,
+        autorNome,
         oficial,
         sort,
         order
       } = req.query;
 
       const comentarios = await comentarioService.listar({
-        page: page ? Number(page) : 1,
+       page: page ? Number(page) : 1,
         limit: limit ? Number(limit) : 10,
         postId: postId ? Number(postId) : undefined,
-        autorId: autorId ? Number(autorId) : undefined,
+        autorNome: autorNome as string,
         oficial: oficial ? oficial === "true" : undefined,
         sort: sort as string,
         order: order as "asc" | "desc"
@@ -165,25 +165,18 @@ export class ComentarioController {
   /**
    * GET /comentarios/autor/:autorId
    */
-  async listarPorAutor(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
+  
+  async listarPorAutor(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const autorNome = String(req.params.autorNome);
 
-    try {
+    const comentarios = await comentarioService.listarPorAutor(autorNome);
 
-      const autorId = Number(req.params.autorId);
-
-      const comentarios =
-        await comentarioService.listarPorAutor(autorId);
-
-      res.status(200).json(comentarios);
-
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json(comentarios);
+  } catch (error) {
+    next(error);
   }
+}
 
   /**
    * PATCH /comentarios/:id/oficial

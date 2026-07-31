@@ -141,81 +141,9 @@ export class EventoController {
     try {
       const { campus } = req.params;
 
-      const eventos = await eventoService.listarPorCampus(campus);
+      const eventos = await eventoService.listarPorCampus(String(campus));
 
       res.status(200).json(eventos);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * GET /eventos/periodo
-   * ?inicio=2026-08-01&fim=2026-08-31
-   */
-  async listarPorPeriodo(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const { inicio, fim } = req.query;
-
-      const eventos = await eventoService.listarPorPeriodo(
-        String(inicio),
-        String(fim)
-      );
-
-      res.status(200).json(eventos);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * POST /eventos/:id/presenca
-   */
-  async confirmarPresenca(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const eventoId = Number(req.params.id);
-      const { usuarioId } = req.body;
-
-      const confirmacao =
-        await eventoService.confirmarPresenca(eventoId, usuarioId);
-
-      res.status(201).json({
-        message: "Presença confirmada com sucesso.",
-        data: confirmacao,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * DELETE /eventos/:id/presenca/:usuarioId
-   */
-  async cancelarPresenca(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const eventoId = Number(req.params.id);
-      const usuarioId = Number(req.params.usuarioId);
-
-      await eventoService.cancelarPresenca(
-        eventoId,
-        usuarioId
-      );
-
-      res.status(200).json({
-        message: "Presença cancelada com sucesso.",
-      });
     } catch (error) {
       next(error);
     }

@@ -28,7 +28,6 @@ export class AvaliacaoController {
       const avaliacoes = await avaliacaoService.listar({
         page: page ? Number(page) : 1,
         limit: limit ? Number(limit) : 10,
-        usuarioId: usuarioId ? Number(usuarioId) : undefined,
         questionarioId: questionarioId ? Number(questionarioId) : undefined,
         sort: sort as string,
         order: order as "asc" | "desc"
@@ -136,28 +135,7 @@ export class AvaliacaoController {
     }
   }
 
-  /**
-   * GET /avaliacoes/usuario/:usuarioId
-   */
-  async listarPorUsuario(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const usuarioId = Number(req.params.usuarioId);
-
-      const avaliacoes =
-        await avaliacaoService.listarPorUsuario(usuarioId);
-
-      res.status(200).json(avaliacoes);
-
-    } catch (error) {
-      next(error);
-    }
-  }
+  
 
   /**
    * GET /avaliacoes/questionario/:questionarioId
@@ -274,29 +252,6 @@ export class AvaliacaoController {
         await avaliacaoService.participacao(questionarioId);
 
       res.status(200).json(participacao);
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * GET /avaliacoes/usuario/:usuarioId/pendentes
-   */
-  async listarPendentes(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const usuarioId = Number(req.params.usuarioId);
-
-      const questionarios =
-        await avaliacaoService.listarPendentes(usuarioId);
-
-      res.status(200).json(questionarios);
 
     } catch (error) {
       next(error);

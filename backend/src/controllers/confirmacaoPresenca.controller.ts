@@ -15,20 +15,14 @@ export class ConfirmacaoPresencaController {
   ): Promise<void> {
     try {
 
-      const {
-        page,
-        limit,
-        eventoId,
-        usuarioId,
-        sort,
-        order
-      } = req.query;
+          const { page, limit, eventoId, usuarioIdentificador, sort, order } = req.query;
+
 
       const confirmacoes = await confirmacaoPresencaService.listar({
         page: page ? Number(page) : 1,
         limit: limit ? Number(limit) : 10,
         eventoId: eventoId ? Number(eventoId) : undefined,
-        usuarioId: usuarioId ? Number(usuarioId) : undefined,
+        usuarioIdentificador: usuarioIdentificador as string,
         sort: sort as string,
         order: order as "asc" | "desc"
       });
@@ -134,28 +128,6 @@ export class ConfirmacaoPresencaController {
     }
   }
 
-  /**
-   * GET /confirmacoes/usuario/:usuarioId
-   */
-  async listarPorUsuario(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const usuarioId = Number(req.params.usuarioId);
-
-      const confirmacoes =
-        await confirmacaoPresencaService.listarPorUsuario(usuarioId);
-
-      res.status(200).json(confirmacoes);
-
-    } catch (error) {
-      next(error);
-    }
-  }
 
   /**
    * GET /confirmacoes/evento/:eventoId/quantidade
@@ -174,29 +146,6 @@ export class ConfirmacaoPresencaController {
         await confirmacaoPresencaService.quantidadePorEvento(eventoId);
 
       res.status(200).json(quantidade);
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * GET /confirmacoes/usuario/:usuarioId/eventos
-   */
-  async eventosDoUsuario(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const usuarioId = Number(req.params.usuarioId);
-
-      const eventos =
-        await confirmacaoPresencaService.eventosDoUsuario(usuarioId);
-
-      res.status(200).json(eventos);
 
     } catch (error) {
       next(error);

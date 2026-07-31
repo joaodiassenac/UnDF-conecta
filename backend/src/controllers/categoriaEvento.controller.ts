@@ -164,7 +164,7 @@ export class CategoriaEventoController {
       const { nome } = req.params;
 
       const categoria =
-        await categoriaEventoService.buscarPorNome(nome);
+        await categoriaEventoService.buscarPorNome(String(nome));
 
       res.status(200).json(categoria);
 

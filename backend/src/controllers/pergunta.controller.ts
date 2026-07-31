@@ -174,7 +174,7 @@ export class PerguntaController {
       const { tipo } = req.params;
 
       const perguntas =
-        await perguntaService.listarPorTipo(tipo);
+        await perguntaService.listarPorTipo(String(tipo));
 
       res.status(200).json(perguntas);
 

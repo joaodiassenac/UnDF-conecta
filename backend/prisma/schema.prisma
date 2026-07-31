@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 enum StatusPublicacao {
@@ -124,14 +123,14 @@ model ForumComment {
 }
 
 model ForumVote {
-  id       Int @id @default(autoincrement())
+  id                   Int @id @default(autoincrement())
+  tipo                 TipoVoto @default(CURTIDA)
+  postId               Int
+  post                 ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  usuarioIdentificador String
+  criadoEm             DateTime @default(now())
 
-  tipo     TipoVoto @default(CURTIDA)
-
-  postId   Int
-  post     ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  criadoEm DateTime @default(now())
+  @@unique([postId, usuarioIdentificador])
 }
 
 //
@@ -173,6 +172,8 @@ model OpcaoPergunta {
 
   perguntaId Int
   pergunta   Pergunta @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
+
+  respostas  Resposta[]
 }
 
 model Avaliacao {

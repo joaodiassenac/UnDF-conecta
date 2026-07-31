@@ -186,32 +186,6 @@ export class OpcaoEnqueteController {
   }
 
   /**
-   * PATCH /opcoes-enquete/:id/decrementar
-   */
-  async decrementarVotos(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const id = Number(req.params.id);
-
-      const opcao =
-        await opcaoEnqueteService.decrementarVotos(id);
-
-      res.status(200).json({
-        message: "Voto removido com sucesso.",
-        data: opcao
-      });
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * GET /opcoes-enquete/:id/percentual
    */
   async percentual(

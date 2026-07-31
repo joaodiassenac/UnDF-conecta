@@ -20,7 +20,7 @@ export class ForumController {
         limit,
         categoriaId,
         status,
-        autorId,
+        autorNome,
         texto,
         sort,
         order
@@ -30,7 +30,7 @@ export class ForumController {
         page: page ? Number(page) : 1,
         limit: limit ? Number(limit) : 10,
         categoriaId: categoriaId ? Number(categoriaId) : undefined,
-        autorId: autorId ? Number(autorId) : undefined,
+        autorNome: autorNome as string,
         status: status as string,
         texto: texto as string,
         sort: sort as string,
@@ -178,7 +178,7 @@ export class ForumController {
       const { status } = req.params;
 
       const posts =
-        await forumService.listarPorStatus(status);
+        await forumService.listarPorStatus(String(status));
 
       res.status(200).json(posts);
 
@@ -190,25 +190,17 @@ export class ForumController {
   /**
    * GET /forum/autor/:autorId
    */
-  async listarPorAutor(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
+  async listarPorAutor(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const autorNome = String(req.params.autorNome);
 
-    try {
+    const posts = await forumService.listarPorAutor(autorNome);
 
-      const autorId = Number(req.params.autorId);
-
-      const posts =
-        await forumService.listarPorAutor(autorId);
-
-      res.status(200).json(posts);
-
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
   }
+}
 
   /**
    * GET /forum/busca

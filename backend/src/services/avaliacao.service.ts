@@ -82,24 +82,24 @@ export class AvaliacaoService {
   }
 
   // Média das notas (perguntas tipo ESTRELAS) de um questionário
-//   async calcularMedia(questionarioId: number) {
-//     const respostas = await prisma.resposta.findMany({
-//       where: {
-//         avaliacao: { questionarioId },
-//         nota: { not: null },
-//       },
-//       select: { nota: true },
-//     });
+   async calcularMedia(questionarioId: number) {
+     const respostas = await prisma.resposta.findMany({
+       where: {
+         avaliacao: { questionarioId },
+         nota: { not: null },
+       },
+       select: { nota: true },
+     });
 
-//     if (respostas.length === 0) return { questionarioId, media: null, totalRespostas: 0 };
+     if (respostas.length === 0) return { questionarioId, media: null, totalRespostas: 0 };
 
-//     const soma = respostas.reduce((acc, r) => acc + (r.nota ?? 0), 0);
-//     return {
-//       questionarioId,
-//       media: Number((soma / respostas.length).toFixed(2)),
-//       totalRespostas: respostas.length,
-//     };
-//   }
+     const soma = respostas.reduce((acc, r) => acc + (r.nota ?? 0), 0);
+     return {
+       questionarioId,
+       media: Number((soma / respostas.length).toFixed(2)),
+       totalRespostas: respostas.length,
+     };
+   }
 
   // % de participação — requer um total esperado de participantes.
   // Sem tabela de usuários, esse total precisa vir de outra fonte (ex.: config por curso).

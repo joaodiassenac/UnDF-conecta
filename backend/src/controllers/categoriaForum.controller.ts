@@ -172,7 +172,7 @@ export class CategoriaForumController {
       const { nome } = req.params;
 
       const categoria =
-        await categoriaForumService.buscarPorNome(nome);
+        await categoriaForumService.buscarPorNome(String(nome));
 
       res.status(200).json(categoria);
 

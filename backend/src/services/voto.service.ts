@@ -12,10 +12,11 @@ interface ListarParams {
 export class VotoService {
 
   async listar(params: ListarParams) {
-    const { page, limit, postId, sort, order } = params;
+    const { page, limit, postId, usuarioIdentificador, sort, order } = params;
 
     const where = {
-      ...(postId ? { postId } : {})
+      ...(postId ? { postId } : {}),
+      ...(usuarioIdentificador ? { usuarioIdentificador } : {}),
     };
 
     const [data, total] = await Promise.all([
@@ -35,12 +36,27 @@ export class VotoService {
     return prisma.forumVote.findUniqueOrThrow({ where: { id } });
   }
 
-  async criar(data: { postId: number;}) {
+  // A constraint única (postId + usuarioIdentificador) no schema impede
+  // que o mesmo identificador curta o mesmo post duas vezes.
+  async criar(data: { postId: number; usuarioIdentificador: string }) {
     return prisma.forumVote.create({ data });
   }
 
   async excluir(id: number) {
     return prisma.forumVote.delete({ where: { id } });
+  }
+
+  async removerCurtida(postId: number, usuarioIdentificador: string) {
+    return prisma.forumVote.delete({
+      where: { postId_usuarioIdentificador: { postId, usuarioIdentificador } },
+    });
+  }
+
+  async verificarCurtida(postId: number, usuarioIdentificador: string) {
+    const voto = await prisma.forumVote.findUnique({
+      where: { postId_usuarioIdentificador: { postId, usuarioIdentificador } },
+    });
+    return voto !== null;
   }
 
   async listarPorPost(postId: number) {

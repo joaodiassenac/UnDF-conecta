@@ -210,29 +210,6 @@ export class QuestionarioController {
   }
 
   /**
-   * GET /questionarios/:id/participantes
-   */
-  async listarParticipantes(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const id = Number(req.params.id);
-
-      const participantes =
-        await questionarioService.listarParticipantes(id);
-
-      res.status(200).json(participantes);
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * GET /questionarios/ativos
    */
   async listarAtivos(

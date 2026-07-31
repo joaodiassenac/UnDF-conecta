@@ -5,6 +5,8 @@ interface ListarParams {
   categoriaId?: number;
   campus?: string;
   curso?: string;
+  inicio?: string;
+  fim?: string;
   sort?: string;
   order?: "asc" | "desc";
 }
@@ -24,13 +26,19 @@ interface CriarEventoInput {
 export class EventoService {
 
   async listar(params: ListarParams) {
-    const { page, limit, categoriaId, campus, curso, sort, order } = params;
+  const { page, limit, categoriaId, campus, curso, inicio, fim, sort, order } = params;
 
-    const where = {
-      ...(categoriaId ? { categoriaId } : {}),
-      ...(campus ? { campus } : {}),
-      ...(curso ? { curso } : {}),
-    };
+  const where = {
+    ...(categoriaId ? { categoriaId } : {}),
+    ...(campus ? { campus } : {}),
+    ...(curso ? { curso } : {}),
+    ...(inicio || fim ? {
+      inicio: {
+        ...(inicio ? { gte: new Date(inicio) } : {}),
+        ...(fim ? { lte: new Date(fim) } : {}),
+      }
+    } : {}),
+  };
 
     const [data, total] = await Promise.all([
       prisma.event.findMany({
