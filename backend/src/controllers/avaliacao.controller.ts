@@ -6,41 +6,6 @@ const avaliacaoService = new AvaliacaoService();
 export class AvaliacaoController {
 
   /**
-   * GET /avaliacoes
-   */
-  async listar(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-
-    try {
-
-      const {
-        page,
-        limit,
-        usuarioId,
-        questionarioId,
-        sort,
-        order
-      } = req.query;
-
-      const avaliacoes = await avaliacaoService.listar({
-        page: page ? Number(page) : 1,
-        limit: limit ? Number(limit) : 10,
-        questionarioId: questionarioId ? Number(questionarioId) : undefined,
-        sort: sort as string,
-        order: order as "asc" | "desc"
-      });
-
-      res.status(200).json(avaliacoes);
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * GET /avaliacoes/:id
    */
   async buscar(

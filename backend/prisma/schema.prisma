@@ -54,8 +54,6 @@ model Event {
 
   criadoPorNome String
 
-  presencas     ConfirmacaoPresenca[]
-
   criadoEm      DateTime @default(now())
   atualizadoEm  DateTime @updatedAt
 
@@ -63,14 +61,6 @@ model Event {
   @@index([categoriaId])
 }
 
-model ConfirmacaoPresenca {
-  id           Int      @id @default(autoincrement())
-
-  eventoId     Int
-  evento       Event    @relation(fields: [eventoId], references: [id], onDelete: Cascade)
-
-  confirmadoEm DateTime @default(now())
-}
 
 //
 // FÓRUM

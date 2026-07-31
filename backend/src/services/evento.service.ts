@@ -95,10 +95,6 @@ export class EventoService {
     });
   }
 
-  async listarPresencas(id: number) {
-    return prisma.confirmacaoPresenca.findMany({ where: { eventoId: id } });
-  }
-
   async estatisticas() {
     const total = await prisma.event.count();
     const proximos = await prisma.event.count({

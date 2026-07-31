@@ -150,26 +150,6 @@ export class EventoController {
   }
 
   /**
-   * GET /eventos/:id/presencas
-   */
-  async listarPresencas(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const eventoId = Number(req.params.id);
-
-      const presencas =
-        await eventoService.listarPresencas(eventoId);
-
-      res.status(200).json(presencas);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * GET /eventos/proximos
    */
   async listarProximos(
