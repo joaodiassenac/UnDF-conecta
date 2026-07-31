@@ -320,19 +320,40 @@ const itemSelecionado = ref<any>(null)
 
 async function carregarQuestionarios() {
   try {
-    const resposta = await listarQuestionariosAtivos()
+    const { data: questionarios } = await listarQuestionariosAtivos()
 
-    console.log('Questionários:', resposta.data)
+    const respondidas: number[] = JSON.parse(
+      localStorage.getItem('avaliacoesRespondidas') ?? '[]'
+    )
 
-    avaliacoesPendentes.value = resposta.data.map(q => ({
-      ...q,
-      subtitulo: q.descricao ?? '',
-      nota: 0,
-      comentario: '',
-      placeholder: 'Comentário (opcional)...'
-    }))
+    const pendentes: AvaliacaoUI[] = []
+    const concluidas: any[] = []
+
+    for (const q of questionarios) {
+      const item: AvaliacaoUI = {
+        ...q,
+        subtitulo: q.descricao ?? '',
+        nota: 0,
+        comentario: '',
+        placeholder: 'Comentário (opcional)...',
+      }
+
+      if (respondidas.includes(q.id)) {
+        concluidas.push({
+          ...item,
+          dataEnvio: '-'
+        })
+      } else {
+        pendentes.push(item)
+      }
+    }
+
+    avaliacoesPendentes.value = pendentes
+    avaliacoesConcluidas.value = concluidas
+    totalAvaliacoes.value = pendentes.length + concluidas.length
+
   } catch (err) {
-    console.error('Erro ao carregar questionários:', err)
+    console.error(err)
   }
 }
 
@@ -345,6 +366,7 @@ const menuItems = ref([
 
 // --- LISTA DE PENDENTES ---
 type AvaliacaoUI = Questionario & {
+  subtitulo: string
   nota: number
   comentario: string
   placeholder: string
@@ -381,7 +403,12 @@ async function carregarEnquetes() {
 
     console.log('Enquetes:', resposta.data)
 
-    enquetes.value = resposta.data
+    enquetes.value = resposta.data.map(enquete => ({
+    ...enquete,
+    respondido: false,
+    respostaSelecionada: null,
+    resultado: null
+  }))
   } catch (err) {
     console.error('Erro ao carregar enquetes:', err)
   }
@@ -408,12 +435,9 @@ async function processarEnvioFinal() {
   const item = itemSelecionado.value
 
   try {
-
     // Busca as perguntas do questionário
     const { data: perguntas } =
       await listarPerguntasDoQuestionario(item.id)
-
-    console.log(perguntas)
 
     await criarAvaliacao({
       questionarioId: item.id,
@@ -425,6 +449,20 @@ async function processarEnvioFinal() {
         }
       ]
     })
+
+    // Salva localmente
+    const respondidas: number[] = JSON.parse(
+      localStorage.getItem('avaliacoesRespondidas') ?? '[]'
+    )
+
+    if (!respondidas.includes(item.id)) {
+      respondidas.push(item.id)
+
+      localStorage.setItem(
+        'avaliacoesRespondidas',
+        JSON.stringify(respondidas)
+      )
+    }
 
     avaliacoesPendentes.value =
       avaliacoesPendentes.value.filter(a => a.id !== item.id)
