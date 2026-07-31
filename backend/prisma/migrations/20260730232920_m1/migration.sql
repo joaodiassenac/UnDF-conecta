@@ -6,7 +6,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `forumvote` ADD COLUMN `usuarioIdentificador` VARCHAR(191) NOT NULL;
+ALTER TABLE `ForumVote` ADD COLUMN `usuarioIdentificador` VARCHAR(191) NOT NULL;
 
 -- CreateIndex
 CREATE UNIQUE INDEX `ForumVote_postId_usuarioIdentificador_key` ON `ForumVote`(`postId`, `usuarioIdentificador`);
